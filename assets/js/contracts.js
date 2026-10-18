@@ -33,7 +33,6 @@
   }
 
   var fPts = document.getElementById('fPts'), fUse = document.getElementById('fUse'), fSort = document.getElementById('fSort'), fFree = document.getElementById('fFree');
-  var count = document.getElementById('cCount');
   function render() {
     var range = fPts.value ? fPts.value.split('-').map(Number) : null;
     var list = all.filter(function (c) {
@@ -49,7 +48,6 @@
       return a.points - b.points;
     });
     grid.innerHTML = list.length ? list.map(card).join('') : '<p>No contracts match those filters.</p>';
-    count.textContent = 'Showing ' + list.length + ' of ' + all.length + ' contracts';
   }
   [fPts, fUse, fSort, fFree].forEach(function (el) { el.addEventListener('change', render); });
 
@@ -57,8 +55,6 @@
     .then(function (r) { return r.json(); })
     .then(function (d) {
       all = d.contracts || []; retail = d.retail_per_1000 || retail;
-      var avail = all.filter(function (c) { return c.status === 'Available'; }).length;
-      var stat = document.getElementById('statCount'); if (stat) stat.textContent = String(avail);
       render();
     })
     .catch(function () {
@@ -103,7 +99,7 @@
         try { if (window.gtag) gtag('event', 'generate_lead', { form: 'resale_interest' }); } catch (err) {}
       })
       .catch(function () {
-        submitBtn.disabled = false; submitBtn.textContent = 'Send my interest';
+        submitBtn.disabled = false; submitBtn.textContent = 'Submit';
         showErr('Something went wrong sending that. Please email owners@rentatwyndham.com with the contract IDs you like.');
       });
   });
