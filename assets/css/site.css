@@ -182,3 +182,4 @@ h3.grp{margin:1.6rem 0 .7rem;padding-bottom:.3rem;border-bottom:2px solid var(--
 .sec-head h2 .cnt{font-size:1rem}
 /* iPhone Safari: empty date inputs collapse to a thin sliver; keep them full size and left-aligned */
 input[type="date"]{min-height:2.9rem;display:block;text-align:left}
+.ok[hidden],.aside[hidden],form[hidden]{display:none}
