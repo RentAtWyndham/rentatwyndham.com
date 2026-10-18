@@ -206,3 +206,9 @@ input[type="date"]{min-height:2.9rem;display:block;text-align:left}
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z'/%3E%3C/svg%3E") center/16px no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z'/%3E%3C/svg%3E") center/16px no-repeat}
 .ok[hidden],.aside[hidden],form[hidden]{display:none}
+/* owner application form */
+.cblock{border:1px solid var(--line);border-radius:12px;padding:1rem;margin:0 0 .8rem;display:grid;gap:.8rem;min-width:0}
+.cblock legend{font-family:var(--display);font-weight:700;padding:0 .4rem}
+.cblock .cremove{justify-self:start}
+.cblock:only-of-type .cremove{display:none}
+#addContract{justify-self:start}
