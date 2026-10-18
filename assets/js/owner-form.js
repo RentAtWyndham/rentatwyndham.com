@@ -1,8 +1,8 @@
 (function () {
   // Owner application form on /rent-your-points -> separate Apps Script web app
   // (logs to the owner pipeline sheet's "Website Applications" tab, emails join@).
-  // Leave ENDPOINT empty until that web app is deployed; the form then tells people to email instead.
-  var ENDPOINT = '';
+  // If ENDPOINT is emptied, the form tells people to email instead.
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycby1QI1CTOL6LY5ahl_bWcPSzIU5QCwyne6QjZngln95eSAh9-rO3puoLH5ZtjaiwoCz6Q/exec';
   // Cloudflare Turnstile site key (public). Leave empty to skip the widget.
   var TURNSTILE_SITEKEY = '';
   var MAX_CONTRACTS = 6;
