@@ -70,7 +70,10 @@
       .then(function () {
         f.hidden = true;
         var aside = document.querySelector('#apply .aside'); if (aside) aside.hidden = true;
-        okBox.hidden = false; okBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var head = document.getElementById('applyHead'); if (head) head.style.display = 'none';
+        var first = (f.first_name.value || '').trim().toLowerCase().replace(/(^|[\s-])\S/g, function (m) { return m.toUpperCase(); });
+        if (first) document.getElementById('oName').textContent = ', ' + first;
+        okBox.hidden = false; okBox.scrollIntoView({ behavior: 'smooth', block: 'start' }); okBox.focus({ preventScroll: true });
         try { if (window.gtag) gtag('event', 'generate_lead', { form: 'owner_application' }); } catch (err) {}
       })
       .catch(function () {
