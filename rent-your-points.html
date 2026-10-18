@@ -126,7 +126,7 @@
   <fieldset class="cblock">
     <legend>Contract <span class="cnum">1</span></legend>
     <label><span class="req">Home resort or contract name</span><input data-k="resort" list="resortList" required maxlength="120" placeholder="Start typing, e.g. Club Access or Glacier Canyon" autocomplete="off"></label>
-    <div class="row2"><label><span class="req">Points per year</span><input data-k="points" type="number" min="1000" max="10000000" step="1000" required></label>
+    <div class="row2"><label><span class="req">Approximate points per year</span><select data-k="points" required><option value="">Choose one</option><option value="Under 200k">Under 200,000</option><option value="200k-300k">200,000 - 300,000</option><option value="300k-400k">300,000 - 400,000</option><option value="400k-500k">400,000 - 500,000</option><option value="500k-600k">500,000 - 600,000</option><option value="600k-700k">600,000 - 700,000</option><option value="700k-800k">700,000 - 800,000</option><option value="800k-900k">800,000 - 900,000</option><option value="900k-1M">900,000 - 1,000,000</option><option value="1M-1.1M">1,000,000 - 1,100,000</option><option value="1.1M-1.2M">1,100,000 - 1,200,000</option><option value="1.2M-1.3M">1,200,000 - 1,300,000</option><option value="1.3M-1.4M">1,300,000 - 1,400,000</option><option value="1.4M-1.5M">1,400,000 - 1,500,000</option><option value="1.5M-1.6M">1,500,000 - 1,600,000</option><option value="1.6M-1.7M">1,600,000 - 1,700,000</option><option value="1.7M-1.8M">1,700,000 - 1,800,000</option><option value="1.8M-1.9M">1,800,000 - 1,900,000</option><option value="1.9M-2M">1,900,000 - 2,000,000</option><option value="Over 2M">Over 2,000,000</option></select></label>
       <label>Annual or biennial<select data-k="usage"><option value="">Choose one</option><option>Annual</option><option>Biennial (even years)</option><option>Biennial (odd years)</option></select></label></div>
     <div class="row2"><label>Years owned<input data-k="years" type="number" min="0" max="60"></label>
       <label>Any resale points?<select data-k="resale"><option value="">Choose one</option><option>No</option><option>Yes</option><option>Some</option><option>Not sure</option></select></label></div>
@@ -147,6 +147,6 @@
   </div>
 </footer>
 <script src="/assets/js/site.js?v=202609242334" defer></script>
-<script src="/assets/js/owner-form.js?v=202610190100" defer></script>
+<script src="/assets/js/owner-form.js?v=202610190200" defer></script>
 </body>
 </html>
