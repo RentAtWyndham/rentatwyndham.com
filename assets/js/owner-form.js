@@ -57,6 +57,10 @@
       return;
     }
     var data = new URLSearchParams(new FormData(f));
+    // Optional questions left blank still need a value for the backend's checks
+    ['vip', 'owners_count', 'mortgage', 'rented_before', 'renting_now', 'source'].forEach(function (k) {
+      if (!data.get(k)) data.set(k, 'Not given');
+    });
     data.set('contracts', contractsJson());
     data.set('page', location.href);
     data.set('submitted_at', new Date().toISOString());
