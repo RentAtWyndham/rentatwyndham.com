@@ -182,3 +182,27 @@ h3.grp{margin:1.6rem 0 .7rem;padding-bottom:.3rem;border-bottom:2px solid var(--
 .sec-head h2 .cnt{font-size:1rem}
 /* iPhone Safari: empty date inputs collapse to a thin sliver; keep them full size and left-aligned */
 input[type="date"]{min-height:2.9rem;display:block;text-align:left}
+/* resale contracts page */
+.filters{display:flex;flex-wrap:wrap;gap:.8rem 1rem;align-items:end;margin-bottom:.8rem}
+.filters label{min-width:150px}
+.filters .check{min-width:0;padding-bottom:.7rem}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem}
+.ccard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem}
+.ccard.taken{opacity:.55}
+.ccard h3{font-size:1.1rem;line-height:1.2}
+.chead{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.cid{font-weight:800;font-size:.8rem;color:var(--muted);letter-spacing:.06em}
+.tag.warn{background:#FCEBD9;color:#8A4A12}
+:root:not([data-theme="light"]) .tag.warn{background:#3a2a1a;color:#F0C08A}
+.cpts{font-size:.95rem;color:var(--muted)}
+.cpts b{color:var(--ink);font-family:var(--display);font-size:1.15rem}
+.cfacts{display:grid;grid-template-columns:1fr 1fr;gap:.5rem .8rem;margin:.2rem 0}
+.cfacts div{display:grid;gap:.05rem}
+.cfacts dt{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.cfacts dd{margin:0;font-family:var(--display);font-weight:700;font-size:1.05rem}
+.ccard .pick{align-self:flex-start;margin-top:auto}
+.checks.one{grid-template-columns:1fr}
+.checks.no li::before{background:var(--muted);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z'/%3E%3C/svg%3E") center/16px no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z'/%3E%3C/svg%3E") center/16px no-repeat}
+.ok[hidden],.aside[hidden],form[hidden]{display:none}
