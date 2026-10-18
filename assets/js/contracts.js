@@ -1,8 +1,8 @@
 (function () {
   // Resale contracts page: renders cards from /assets/data/contracts.json and sends the buyer-interest form.
   // Buyer form -> separate Apps Script web app (logs to the Kushman tracker Leads tab, emails owners@).
-  // Leave ENDPOINT empty until that web app is deployed; the form then tells people to email instead.
-  var ENDPOINT = '';
+  // If ENDPOINT is emptied, the form tells people to email instead.
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwaptDG5nF_rhj5HXjIdy8YGXjyMzYHBPj6VE6lhnyt3jq6CT_y4VnrThgMIBoIm1LuHQ/exec';
   var grid = document.getElementById('cGrid');
   if (!grid) return;
 
