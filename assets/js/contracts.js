@@ -14,24 +14,28 @@
   function card(c) {
     var mfk = c.mf / (c.points / 1000);
     var free = c.closing === 'Free';
-    var taken = c.status !== 'Available';
+    var taken = c.status !== 'Available', sold = c.status === 'Sold';
     return '<article class="ccard' + (taken ? ' taken' : '') + '">' +
       '<div class="chead"><span class="cid">' + esc(c.id) + '</span>' +
-        (free ? '<span class="tag">Free closing</span>' : '<span class="tag warn">Ask about closing</span>') +
-        (taken ? '<span class="tag">' + esc(c.status) + '</span>' : '') + '</div>' +
+        (sold ? '' : free ? '<span class="tag">Free closing</span>' : '<span class="tag warn">Ask about closing</span>') +
+        (taken ? '<span class="tag' + (sold ? ' sold' : '') + '">' + (sold ? 'SOLD' + (c.date_sold ? ' ' + esc(soldOn(c.date_sold)) : '') : esc(c.status)) + '</span>' : '') + '</div>' +
       '<h3>' + esc(c.resort) + '</h3>' +
       '<p class="cpts"><b>' + c.points.toLocaleString('en-US') + '</b> points · ' + esc(c.usage) + (c.renewal ? ' · renews ' + esc(c.renewal) : '') + '</p>' +
       '<dl class="cfacts">' +
-        '<div><dt>Price (once)</dt><dd>' + money(c.price) + '</dd></div>' +
+        '<div><dt>' + (c.sold_price ? 'Sold for' : 'Price (once)') + '</dt><dd>' + money(c.price) + '</dd></div>' +
         '<div><dt>Yearly fee</dt><dd>' + money(c.mf) + '</dd></div>' +
         '<div><dt>Fee per 1,000 pts</dt><dd>' + money(Math.round(mfk * 100) / 100) + '</dd></div>' +
-        '<div><dt>Year one</dt><dd>' + whole(c.price + c.mf) + (free ? '' : ' + closing') + '</dd></div>' +
+        (sold ? '<div><dt>Wyndham retail</dt><dd>' + whole(c.points / 1000 * retail) + '</dd></div>' : '<div><dt>Year one</dt><dd>' + whole(c.price + c.mf) + (free ? '' : ' + closing') + '</dd></div>') +
       '</dl>' +
-      '<p class="hint">New from Wyndham: about ' + whole(c.points / 1000 * retail) + '</p>' +
+      (sold ? '' : '<p class="hint">New from Wyndham: about ' + whole(c.points / 1000 * retail) + '</p>') +
       (taken ? '' : '<button class="btn btn-line sm pick" type="button" data-id="' + esc(c.id) + '" data-name="' + esc(c.resort) + '">I\'m interested</button>') +
       '</article>';
   }
 
+  function soldOn(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); if (!m) return '';
+    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][+m[2] - 1] + ' ' + (+m[3]) + ', ' + m[1];
+  }
   var fPts = document.getElementById('fPts'), fUse = document.getElementById('fUse'), fSort = document.getElementById('fSort'), fFree = document.getElementById('fFree');
   function render() {
     var range = fPts.value ? fPts.value.split('-').map(Number) : null;
@@ -43,9 +47,8 @@
     });
     var key = fSort.value;
     list.sort(function (a, b) {
-      if (key === 'price') return a.price - b.price;
-      if (key === 'mfk') return a.mf / a.points - b.mf / b.points;
-      return a.points - b.points;
+      var d = key === 'price' ? a.price - b.price : key === 'mfk' ? a.mf / a.points - b.mf / b.points : a.points - b.points;
+      return d || ((a.status === 'Sold') - (b.status === 'Sold'));
     });
     grid.innerHTML = list.length ? list.map(card).join('') : '<p>No contracts match those filters.</p>';
   }

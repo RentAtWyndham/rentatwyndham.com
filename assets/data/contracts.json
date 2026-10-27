@@ -23,11 +23,25 @@
     {"id":"RC-18","resort":"Wyndham Palm-Aire","usage":"Biennial Even","points":168000,"renewal":"January","mf":952.20,"price":499,"closing":"Free","status":"Available"},
     {"id":"RC-19","resort":"Wyndham Glacier Canyon (Wisconsin Dells)","usage":"Annual","points":210000,"renewal":"January","mf":2076.00,"price":799,"closing":"Free","status":"Available"},
     {"id":"RC-20","resort":"Wyndham Club Access","usage":"Annual","points":300000,"renewal":"April","mf":2772.00,"price":499,"closing":"Free","status":"Available"},
-    {"id":"RC-21","resort":"Wyndham Club Access","usage":"Annual","points":400000,"renewal":"January","mf":3696.00,"price":899,"closing":"Free","status":"Available"},
+    {"id":"RC-21","resort":"Wyndham Club Access","usage":"Annual","points":400000,"renewal":"January","mf":3696.00,"price":899,"closing":"Free","status":"Sold","date_sold":"2026-10-21"},
     {"id":"RC-22","resort":"Wyndham at Waikiki Beach Walk","usage":"Annual","points":404000,"renewal":"January","mf":3539.04,"price":2500,"closing":"Free","status":"Available"},
     {"id":"RC-23","resort":"Wyndham Club Access","usage":"Annual","points":826000,"renewal":"January","mf":7632.24,"price":999,"closing":"Free","status":"Available"},
     {"id":"RC-24","resort":"Club Wyndham Clearwater Beach Resort","usage":"Annual","points":925000,"renewal":"December","mf":5094.84,"price":10000,"closing":"Ask","status":"Available"},
     {"id":"RC-25","resort":"Margaritaville Vacation Club by Wyndham - Rio Mar, Puerto Rico","usage":"Annual","points":1000000,"renewal":"January","mf":9819.96,"price":7500,"closing":"Ask","status":"Available"},
-    {"id":"RC-26","resort":"Wyndham Park City","usage":"Annual","points":1000000,"renewal":"January","mf":6450.00,"price":12500,"closing":"Ask","status":"Available"}
-  ]
+    {"id":"RC-26","resort":"Wyndham Park City","usage":"Annual","points":1000000,"renewal":"January","mf":6450.00,"price":12500,"closing":"Ask","status":"Available"},
+    {"id":"S-01","resort":"Wyndham Kingsgate","usage":"Annual","points":84000,"renewal":"January","mf":894.24,"price":299,"closing":"","status":"Sold","date_sold":"2026-09-15","sold_price":true},
+    {"id":"S-02","resort":"Wyndham Club Access","usage":"Annual","points":126000,"renewal":"January","mf":1280.16,"price":299,"closing":"","status":"Sold","date_sold":"2026-09-25","sold_price":true},
+    {"id":"S-03","resort":"Wyndham Cypress Palms","usage":"Annual","points":128000,"renewal":"January","mf":1157.16,"price":299,"closing":"","status":"Sold","date_sold":"2026-09-22","sold_price":true},
+    {"id":"S-04","resort":"Club Wyndham Atlanta (Margaritaville)","usage":"Annual","points":154000,"renewal":"October","mf":1048.68,"price":870,"closing":"","status":"Sold","date_sold":"2026-10-21","sold_price":true},
+    {"id":"S-05","resort":"Wyndham Star Island Resort","usage":"Annual","points":189000,"renewal":"January","mf":1695.24,"price":299,"closing":"","status":"Sold","date_sold":"2026-09-18","sold_price":true},
+    {"id":"S-06","resort":"Wyndham Club Access","usage":"Annual","points":226000,"renewal":"December","mf":1780.92,"price":299,"closing":"","status":"Sold","date_sold":"2026-09-29","sold_price":true},
+    {"id":"S-07","resort":"Wyndham Club Access","usage":"Annual","points":300000,"renewal":"January","mf":2475,"price":149,"closing":"","status":"Sold","date_sold":"2026-10-04","sold_price":true},
+    {"id":"S-08","resort":"Wyndham Club Access","usage":"Annual","points":300000,"renewal":"January","mf":2766,"price":149,"closing":"","status":"Sold","date_sold":"2026-10-08","sold_price":true},
+    {"id":"S-09","resort":"Wyndham Club Access","usage":"Annual","points":314000,"renewal":"April","mf":2788.32,"price":149,"closing":"","status":"Sold","date_sold":"2026-10-11","sold_price":true},
+    {"id":"S-10","resort":"Wyndham Smoky Mountains","usage":"Annual","points":314000,"renewal":"April","mf":2333.04,"price":199,"closing":"","status":"Sold","date_sold":"2026-10-15","sold_price":true},
+    {"id":"S-11","resort":"Wyndham Bali Hai Villas","usage":"Annual","points":325000,"renewal":"January","mf":150,"price":2600,"closing":"","status":"Sold","date_sold":"2026-10-24","sold_price":true},
+    {"id":"S-12","resort":"Wyndham Grand Desert","usage":"Annual","points":420000,"renewal":"January","mf":2994.6,"price":255,"closing":"","status":"Sold","date_sold":"2026-10-18","sold_price":true},
+    {"id":"S-13","resort":"Wyndham Vacation Resorts Panama City Beach","usage":"Annual","points":654000,"renewal":"January","mf":4395,"price":799,"closing":"","status":"Sold","date_sold":"2026-09-13","sold_price":true}
+  ],
+  "sold_source": "Sold contracts: Wyndham Sold listings for John (Google Sheet with Date Sold, John Kushman 2026-10-20). Resort, points, sold price, yearly fee, date only - no buyer names or file numbers. Status Sold + date_sold; the price field is the sold price."
 }

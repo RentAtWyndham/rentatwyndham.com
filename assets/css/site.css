@@ -189,6 +189,8 @@ input[type="date"]{min-height:2.9rem;display:block;text-align:left}
 .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem}
 .ccard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem}
 .ccard.taken{opacity:.55}
+.tag.sold{background:#1b1b1b;color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag.sold{background:#e8e8e8;color:#111}}
 .ccard h3{font-size:1.1rem;line-height:1.2}
 .chead{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
 .cid{font-weight:800;font-size:.8rem;color:var(--muted);letter-spacing:.06em}
