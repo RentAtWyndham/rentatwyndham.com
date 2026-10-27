@@ -22,7 +22,7 @@
       '<h3>' + esc(c.resort) + '</h3>' +
       '<p class="cpts"><b>' + c.points.toLocaleString('en-US') + '</b> points · ' + esc(c.usage) + (c.renewal ? ' · renews ' + esc(c.renewal) : '') + '</p>' +
       '<dl class="cfacts">' +
-        '<div><dt>' + (sold ? 'Sold for' : 'Price (once)') + '</dt><dd>' + money(c.price) + '</dd></div>' +
+        '<div><dt>' + (c.sold_price ? 'Sold for' : 'Price (once)') + '</dt><dd>' + money(c.price) + '</dd></div>' +
         '<div><dt>Yearly fee</dt><dd>' + money(c.mf) + '</dd></div>' +
         '<div><dt>Fee per 1,000 pts</dt><dd>' + money(Math.round(mfk * 100) / 100) + '</dd></div>' +
         (sold ? '<div><dt>Wyndham retail</dt><dd>' + whole(c.points / 1000 * retail) + '</dd></div>' : '<div><dt>Year one</dt><dd>' + whole(c.price + c.mf) + (free ? '' : ' + closing') + '</dd></div>') +
