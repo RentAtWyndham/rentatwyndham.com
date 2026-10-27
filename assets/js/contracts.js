@@ -32,10 +32,14 @@
       '</article>';
   }
 
+  function soldOn(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); if (!m) return '';
+    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][+m[2] - 1] + ' ' + (+m[3]) + ', ' + m[1];
+  }
   function soldCard(c) {
     var mfk = c.mf / (c.points / 1000);
     return '<article class="ccard sold">' +
-      '<div class="chead"><span class="tag sold">SOLD</span></div>' +
+      '<div class="chead"><span class="tag sold">SOLD</span>' + (c.date_sold ? '<span class="cid">' + esc(soldOn(c.date_sold)) + '</span>' : '') + '</div>' +
       '<h3>' + esc(c.resort) + '</h3>' +
       '<p class="cpts"><b>' + c.points.toLocaleString('en-US') + '</b> points · ' + esc(c.usage) + '</p>' +
       '<dl class="cfacts">' +
