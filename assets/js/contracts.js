@@ -18,7 +18,7 @@
     return '<article class="ccard' + (taken ? ' taken' : '') + '">' +
       '<div class="chead"><span class="cid">' + esc(c.id) + '</span>' +
         (free ? '<span class="tag">Free closing</span>' : '<span class="tag warn">Ask about closing</span>') +
-        (taken ? '<span class="tag">' + esc(c.status) + '</span>' : '') + '</div>' +
+        (taken ? '<span class="tag' + (c.status === 'Sold' ? ' sold' : '') + '">' + (c.status === 'Sold' ? 'SOLD' : esc(c.status)) + '</span>' : '') + '</div>' +
       '<h3>' + esc(c.resort) + '</h3>' +
       '<p class="cpts"><b>' + c.points.toLocaleString('en-US') + '</b> points · ' + esc(c.usage) + (c.renewal ? ' · renews ' + esc(c.renewal) : '') + '</p>' +
       '<dl class="cfacts">' +
@@ -30,6 +30,20 @@
       '<p class="hint">New from Wyndham: about ' + whole(c.points / 1000 * retail) + '</p>' +
       (taken ? '' : '<button class="btn btn-line sm pick" type="button" data-id="' + esc(c.id) + '" data-name="' + esc(c.resort) + '">I\'m interested</button>') +
       '</article>';
+  }
+
+  function soldCard(c) {
+    var mfk = c.mf / (c.points / 1000);
+    return '<article class="ccard sold">' +
+      '<div class="chead"><span class="tag sold">SOLD</span></div>' +
+      '<h3>' + esc(c.resort) + '</h3>' +
+      '<p class="cpts"><b>' + c.points.toLocaleString('en-US') + '</b> points · ' + esc(c.usage) + '</p>' +
+      '<dl class="cfacts">' +
+        '<div><dt>Sold for</dt><dd>' + money(c.sold) + '</dd></div>' +
+        '<div><dt>Yearly fee</dt><dd>' + money(c.mf) + '</dd></div>' +
+        '<div><dt>Fee per 1,000 pts</dt><dd>' + money(Math.round(mfk * 100) / 100) + '</dd></div>' +
+        '<div><dt>New from Wyndham</dt><dd>' + whole(c.points / 1000 * retail) + '</dd></div>' +
+      '</dl></article>';
   }
 
   var fPts = document.getElementById('fPts'), fUse = document.getElementById('fUse'), fSort = document.getElementById('fSort'), fFree = document.getElementById('fFree');
@@ -56,6 +70,8 @@
     .then(function (d) {
       all = d.contracts || []; retail = d.retail_per_1000 || retail;
       render();
+      var sg = document.getElementById('sGrid'), sw = document.getElementById('soldWrap');
+      if (sg && sw && d.recently_sold && d.recently_sold.length) { sg.innerHTML = d.recently_sold.map(soldCard).join(''); sw.hidden = false; }
     })
     .catch(function () {
       grid.innerHTML = '<p>The list didn\'t load. Email <a href="mailto:owners@rentatwyndham.com">owners@rentatwyndham.com</a> and we\'ll send it.</p>';
