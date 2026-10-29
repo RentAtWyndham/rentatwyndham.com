@@ -1,6 +1,6 @@
 {
   "source": "Resale Contracts - Kushman 2026-10, Contracts tab (copied 2026-10-18)",
-  "offer_ends": "2026-10-30",
+  "offer_ends": "2026-12-31",
   "retail_per_1000": 180,
   "contracts": [
     {"id":"RC-01","resort":"Wyndham Nashville","usage":"Annual","points":49000,"renewal":"January","mf":768.28,"price":499,"closing":"Free","status":"Available"},
