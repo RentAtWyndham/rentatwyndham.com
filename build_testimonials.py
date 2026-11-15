@@ -1,69 +1,85 @@
 #!/usr/bin/env python3
 """Build testimonials.html from testimonials.json. Plain Python, no AI, no network.
-Usage: python3 build_testimonials.py [testimonials.json] [testimonials.html]
+Usage: python3 build_testimonials.py [testimonials.json] [testimonials.html] [template.html]
 To add a testimonial: append an object to "owner" or "renter" in the JSON, rerun.
 Show a name (first name + last initial) only when name_ok is true AND display_name is filled in.
-Optional "location" (City, ST) is appended after the name."""
-import html, json, sys
+Optional "location" (City, ST) is appended after the name.
+
+The page shell (head links, header, menu, footer, site script) is copied from
+faqs.html, so the Testimonials page always matches the rest of the site. Rerun
+this script after changing the site menu or footer. It stops with an error if
+faqs.html no longer has the parts it expects."""
+import html, json, re, sys
 from pathlib import Path
 
 src = Path(sys.argv[1] if len(sys.argv) > 1 else "testimonials.json")
 out = Path(sys.argv[2] if len(sys.argv) > 2 else "testimonials.html")
+tpl = Path(sys.argv[3] if len(sys.argv) > 3 else "faqs.html")
 d = json.loads(src.read_text(encoding="utf-8"))
+t = tpl.read_text(encoding="utf-8")
 e = html.escape
 
-def card(t):
-    name = t["display_name"] if t.get("name_ok") and t.get("display_name") else t["who"]
-    meta = e(name) + (", " + e(t["location"]) if t.get("location") else "")
-    return f'<figure class="card"><blockquote>{e(t["quote"])}</blockquote><figcaption>{meta}</figcaption></figure>'
+URL = "https://www.rentatwyndham.com/testimonials"
+TITLE = "Testimonials | RentAtWyndham.com"
+DESC = "What owners said about working with RentAtWyndham's founder, John Ellis, at his earlier company (2012-2013)."
+
+
+def sub1(pattern, repl, text, flags=re.S):
+    """Replace exactly one match, or stop."""
+    new, n = re.subn(pattern, lambda m: repl, text, count=1, flags=flags)
+    if n != 1:
+        sys.exit(f"build_testimonials: template {tpl} is missing: {pattern}")
+    return new
+
+
+def card(x):
+    name = x["display_name"] if x.get("name_ok") and x.get("display_name") else x["who"]
+    meta = e(name) + (", " + e(x["location"]) if x.get("location") else "")
+    return (f'<figure class="ccard tcard"><blockquote>{e(x["quote"])}</blockquote>'
+            f'<figcaption>{meta}</figcaption></figure>')
+
 
 def section(title, intro, items):
     if not items:
         return ""
-    cards = "\n".join(card(t) for t in items)
-    return f'<section><h2>{e(title)}</h2><p class="note">{e(intro)}</p><div class="grid">{cards}</div></section>'
+    cards = "\n".join(card(x) for x in items)
+    return (f'  <div class="sec-head top-gap"><h2>{e(title)}</h2><p>{e(intro)}</p></div>\n'
+            f'  <div class="cgrid">{cards}</div>\n')
+
 
 body = section("Renters", d.get("renter_disclosure", ""), d.get("renter", [])) + \
        section("Owners (2012-2013, earlier company)", d.get("owner_disclosure", ""), d.get("owner", []))
 
-page = f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Testimonials | RentAtWyndham</title>
-<meta name="description" content="What owners said about working with RentAtWyndham's founder, John Ellis, at his earlier company (2012-2013).">
-<style>
-:root{{--bg:#fff;--fg:#1b2430;--muted:#5b6675;--card:#f4f6f9;--line:#dde3ea;--accent:#0b5cab}}
-@media (prefers-color-scheme:dark){{:root{{--bg:#12171d;--fg:#e8edf2;--muted:#9aa6b4;--card:#1b222b;--line:#2b3440;--accent:#6db3f2}}}}
-*{{box-sizing:border-box}}
-body{{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}}
-main{{max-width:960px;margin:0 auto;padding:40px 16px 64px}}
-h1{{font-size:2rem;margin:0 0 8px}}
-h2{{font-size:1.4rem;margin:40px 0 4px}}
-.lead{{color:var(--muted);margin:0 0 8px}}
-.note{{color:var(--muted);font-size:.9rem;margin:0 0 16px;max-width:70ch}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}}
-.card{{margin:0;padding:20px;background:var(--card);border:1px solid var(--line);border-radius:10px}}
-blockquote{{margin:0 0 12px;font-size:1.02rem}}
-blockquote::before{{content:"\\201C"}} blockquote::after{{content:"\\201D"}}
-figcaption{{color:var(--muted);font-size:.9rem}}
-.cta{{margin-top:48px;padding:20px;border:1px solid var(--line);border-radius:10px}}
-.cta a{{color:var(--accent);font-weight:600}}
-</style>
-</head>
-<body>
-<main>
-<h1>Testimonials</h1>
-<p class="lead">In their own words.</p>
-{body}
-<div class="cta">
-<p><strong>Ready to rent?</strong> <a href="https://www.rentatwyndham.com/booking-request">www.rentatwyndham.com/booking-request</a></p>
-<p>Questions? <a href="mailto:info@rentatwyndham.com">info@rentatwyndham.com</a></p>
-</div>
-</main>
-</body>
-</html>
-"""
-out.write_text(page, encoding="utf-8")
+main = ('<main id="main">\n<section><div class="wrap">\n'
+        '  <div class="sec-head short"><span class="eyebrow">Testimonials</span><h1>In their own words</h1></div>\n'
+        f'{body}'
+        '</div></section>\n'
+        '<section class="tight"><div class="wrap">\n'
+        '  <p class="after"><strong>Ready to rent?</strong> '
+        '<a href="https://www.rentatwyndham.com/booking-request">www.rentatwyndham.com/booking-request</a></p>\n'
+        '  <p>Questions? <a href="mailto:info@rentatwyndham.com">info@rentatwyndham.com</a></p>\n'
+        '</div></section>\n'
+        '</main>')
+
+style = ('<style>\n'
+         '.tcard{margin:0}\n'
+         '.tcard blockquote{margin:0;font-size:1.02rem}\n'
+         '.tcard blockquote::before{content:"\\201C"}.tcard blockquote::after{content:"\\201D"}\n'
+         '.tcard figcaption{color:var(--muted);font-size:.9rem;font-weight:700}\n'
+         '</style>\n')
+
+p = t
+p = sub1(r"<title>.*?</title>", f"<title>{e(TITLE)}</title>", p)
+p = sub1(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{e(DESC)}">', p)
+p = sub1(r'<link rel="canonical" href="[^"]*">', f'<link rel="canonical" href="{URL}">', p)
+p = sub1(r'<meta property="og:title" content="[^"]*">', f'<meta property="og:title" content="{e(TITLE)}">', p)
+p = sub1(r'<meta property="og:description" content="[^"]*">', f'<meta property="og:description" content="{e(DESC)}">', p)
+p = sub1(r'<meta property="og:url" content="[^"]*">', f'<meta property="og:url" content="{URL}">', p)
+p = sub1(r'<script type="application/ld\+json">.*?</script>\n', "", p)
+p = sub1(r"</head>", style + "</head>", p)
+p = sub1(r'<a href="/faqs" class="active">FAQ</a>', '<a href="/faqs">FAQ</a>', p)
+p = sub1(r'<a href="/testimonials">Testimonials</a>', '<a href="/testimonials" class="active">Testimonials</a>', p)
+p = sub1(r"<main\b.*?</main>", main, p)
+
+out.write_text(p, encoding="utf-8")
 print(f"wrote {out} ({len(d.get('owner', []))} owner, {len(d.get('renter', []))} renter)")
