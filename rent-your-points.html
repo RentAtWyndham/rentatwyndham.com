@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="/assets/css/site.css?v=202610190100">
+<link rel="stylesheet" href="/assets/css/site.css?v=202611170900">
 
 </head>
 <body>
@@ -90,13 +90,14 @@
       <div id="contracts"></div>
       <button class="btn btn-line sm" type="button" id="addContract">+ Add another contract</button>
 
-      <p class="legend">Your account <span class="hint">(optional, but it helps us prepare for our call)</span></p>
+      <details class="optq"><summary class="legend">Optional - five quick questions that help us prepare for our call</summary>
       <div class="row2"><label>VIP status<select name="vip"><option value="">Choose one</option><option>None</option><option>Bronze</option><option>Silver</option><option>Gold</option><option>Platinum</option><option>Founders</option><option>Presidential Reserve</option><option>Not sure</option></select></label>
         <label>People on the ownership<select name="owners_count"><option value="">Choose one</option><option>1</option><option>2</option><option>3</option><option>4 or more</option></select></label></div>
       <label>Is your ownership paid off?<select name="mortgage"><option value="">Choose one</option><option>Fully paid off</option><option>Still paying a mortgage</option></select></label>
       <div class="row2"><label>Have you rented out points before?<select name="rented_before"><option value="">Choose one</option><option>Yes</option><option>No</option></select></label>
         <label>Are you renting them out now?<select name="renting_now"><option value="">Choose one</option><option>Yes</option><option>No</option></select></label></div>
       <label>How did you hear about us?<select name="source"><option value="">Choose one</option><option>Facebook group</option><option>Facebook post</option><option>Google search</option><option>TUG or another forum</option><option>Referral from an owner</option><option>Other</option></select></label>
+      </details>
       <label>Anything else we should know<textarea rows="3" name="notes" maxlength="1000"></textarea></label>
       <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <input type="hidden" name="_started" id="oStarted">

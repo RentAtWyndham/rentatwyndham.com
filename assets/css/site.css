@@ -227,3 +227,5 @@ input[type="date"]{min-height:2.9rem;display:block;text-align:left}
 .thanks-foot{font-size:.95rem;color:var(--muted)}
 .thanks[hidden]{display:none}
 .thanks{scroll-margin-top:100px}
+.optq summary{cursor:pointer}
+.optq>*+*{margin-top:.9rem}
