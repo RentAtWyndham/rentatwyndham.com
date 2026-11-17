@@ -51,6 +51,10 @@
     e.preventDefault(); msg.hidden = true;
     if (!f.checkValidity()) { f.reportValidity(); return; }
     if (f.website && f.website.value) { return; } // honeypot
+    // Same checks the backend makes. The reply cannot be read (no-cors), so a rejected application would still
+    // show the thank-you panel and be lost. Catch those here instead.
+    if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(f.email.value.trim())) { showErr('Please check your email address.'); f.email.focus(); return; }
+    if (String(f.phone.value).replace(/\D/g, '').length < 10) { showErr('Please enter your phone number with the area code (10 digits).'); f.phone.focus(); return; }
     if (Date.now() - Number(started.value || 0) < 3000) { showErr('That was quick. Please take a second look and send again.'); started.value = String(Date.now() - 3000); return; }
     if (!ENDPOINT) {
       showErr('The form is being connected. Please email join@rentatwyndham.com with your name, phone, and what you own.');
