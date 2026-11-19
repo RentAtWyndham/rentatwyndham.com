@@ -44,6 +44,11 @@ Not covered live (by design): a real resale buyer, where John Kushman is cc'd an
 for real on 2026-11-09 and is covered by the backend's offline tests. Known and harmless: in resale TEST mode the buyer email and
 the page still say John Kushman was copied; only John ever sees that.
 
-Test rows left behind (John deletes; nobody else): Leads tab WEB-20261118-220820-FORMCH, WEB-20261118-203743-FORMCH,
-WEB-20261118-190742-TEST; owner sheet Website Applications row 2 WEB-20261118-225107-FORMCH; resale tracker Leads row 21
-RES-20261118-225257-FORMCH; RAW Special Deals List Subscribers row 3 DEAL-20261118-225436-TEST.
+Test rows: all six were deleted on 2026-11-18 about 11:20 PM PT with John's OK and read back (Leads tab WEB-20261118-220820-FORMCH,
+WEB-20261118-203743-FORMCH, WEB-20261118-190742-TEST; Website Applications WEB-20261118-225107-FORMCH; resale Leads
+RES-20261118-225257-FORMCH; deals Subscribers DEAL-20261118-225436-TEST).
+
+Wording decisions (John 2026-11-18): the booking side box now reads "Usually within the hour during business hours (the same day
+otherwise), we email you back ..." (was "Usually the same day, John or Elizabeth emails you back ..."). The owner page keeps
+join@rentatwyndham.com and the resale page keeps owners@rentatwyndham.com - the Primer's "questions go to info@" rule covers renter
+messages only.
