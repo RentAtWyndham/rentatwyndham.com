@@ -27,19 +27,28 @@ Test all five points below on the live site, on desktop and at phone width (abou
 label, success with a reference, an older backend with no reference, and no sideways scroll. 352 checks. It sends nothing real.
 
 ## Forms and status
-Last updated 2026-11-19. All four forms share `assets/js/form-kit.js` (field checks, send, slow-send label, reference line).
-"Mock" = passed the mocked test above. "Live" = passed on the real site with real emails checked in Gmail.
+Last updated 2026-11-18 11:00 PM PT. **All four forms passed all five checks live on 2026-11-18**, desktop and 390px, with the
+emails read in Gmail. All four share `assets/js/form-kit.js` (field checks, send, slow-send label, reference line).
 
 | Form | Page | Script | Backend (automations/apps-script) | 1 Response | 2 Field errors | 3 Message | 4 Next | 5 Email |
 |---|---|---|---|---|---|---|---|---|
-| Booking request | /booking-request | assets/js/site.js + form-kit.js | website-date-request | Live PASS 2026-11-18 (ref WEB-20261118-203743-FORMCH) | Live PASS 2026-11-18 | Live PASS 2026-11-18: thanks by name, summary, reference | Live PASS: stays on page, form and side box hidden | Live PASS 2026-11-18: ack "We received your request - RentAtWyndham.com" + info@ "Date Request - ..." with the same Inquiry ID |
-| Owner application | /rent-your-points | assets/js/owner-form.js + form-kit.js | owner-interest | Mock pass - live test pending | Mock pass - live pending | Mock pass - live pending ("Thank you, [name]! ..." + "mention reference WEB-...") | Stays on page, form hidden, 3 next steps - live pending | Owner "Thanks for applying with RentAtWyndham" from join@ + team "New Owner Application - ..." with "Reference:" - live pending |
-| Resale contract interest | /wyndham-points-for-sale | assets/js/contracts.js + form-kit.js | resale-buyer-interest | Mock pass - live test pending | Mock pass - live pending | Mock pass - live pending ("Thank you, [name]. We received your request." + contracts + "mention reference RES-...") | Stays on page, "Back to the contract list" link - live pending | Buyer "Your interest in these Wyndham contracts" + team "Resale Interest - ..." with "Reference:" - live pending. A test from jellis@ runs in TEST mode: John Kushman is not emailed |
-| Special deals pop-up | / (home, or /#deals to open it) | assets/js/deals-popup.js + form-kit.js | special-deals-signup | Mock pass - live test pending | Mock pass - live pending | Mock pass - live pending ("You're on the list, [name]." / "already on the list" + reference DEAL-...) | "Request your dates" button to /booking-request - live pending | Welcome "You're on the RentAtWyndham deals list" + info@ "New deals sign-up - ..." with "Reference:" - live pending |
+| Booking request | /booking-request | assets/js/site.js + form-kit.js | website-date-request v1.4.0 | PASS - 6.5 s, ref WEB-20261118-220820-FORMCH | PASS - 8 fields on an empty form (Adults and Kids have defaults); bad email + phone; same at 390px | PASS - "Thank you, Test. We received your request." + summary + reference | PASS - stays on page, form replaced by the "Request received" panel | PASS - ack "We received your request - RentAtWyndham.com" ("Good to see you again, Test!") + info@ "Date Request - ..." with the same Inquiry ID and the History line |
+| Owner application | /rent-your-points | assets/js/owner-form.js + form-kit.js | owner-interest v1.1.0 | PASS - 5.2 s, ref WEB-20261118-225107-FORMCH | PASS - 6 fields incl. contract 1 resort and points; same at 390px | PASS - "Thank you, Test! We're so glad you reached out." + reference | PASS - stays on page, form hidden, 3 next steps | PASS - "Thanks for applying with RentAtWyndham" from join@ + team "New Owner Application - Formcheck - ..." with the same Reference |
+| Resale contract interest | /wyndham-points-for-sale | assets/js/contracts.js + form-kit.js | resale-buyer-interest v1.4.0 | PASS - 4.2 s, ref RES-20261118-225257-FORMCH (contract RC-01) | PASS - 3 fields once a contract is picked (4 with none); same at 390px | PASS - "Thank you, Test. We received your request." + contract + reference | PASS - stays on page, "Back to the contract list" link | PASS in TEST mode - buyer reply, "TEST Wyndham contract buyer" notice and team "Resale Interest - ..." with the same Reference, all to John only; John Kushman not emailed, Contracts tab untouched (read back) |
+| Special deals pop-up | / (home, or /#deals to open it) | assets/js/deals-popup.js + form-kit.js | special-deals-signup v1.2.0 | PASS - 3.6 s, ref DEAL-20261118-225436-TEST | PASS - first name + email; same at 390px | PASS - "You're on the list, Test." then, second time, "You're already on the list, Test." with the same reference | PASS - "Request your dates" button to /booking-request | PASS - welcome "You're on the RentAtWyndham deals list" + info@ "New deals sign-up - Test" with the same Reference; no email on the repeat |
 
-Changes since the 2026-11-18 booking test (so the booking form gets one more live run with the others): the booking form moved onto
-form-kit.js, the button says "Sending - this can take up to 20 seconds..." after 4 seconds, and the info@ notice gains a "History:" line
-(backend v1.4.0).
+Slow-send label: seen live on booking, owner and resale ("Sending - this can take up to 20 seconds..." at 4.0 s). The deals send
+finished in under 4 s, so its label was only checked in the mocked test.
 
-Reference IDs: every backend returns one once its new version is deployed (owner-interest v1.1.0 `WEB-...-LASTNA`, resale-buyer-interest
-v1.4.0 `RES-...`, special-deals-signup v1.2.0 `DEAL-...`). Until then the three pages simply show no reference line.
+Not covered live (by design): a real resale buyer, where John Kushman is cc'd and the Contracts tab is updated - that path last ran
+for real on 2026-11-09 and is covered by the backend's offline tests. Known and harmless: in resale TEST mode the buyer email and
+the page still say John Kushman was copied; only John ever sees that.
+
+Test rows: all six were deleted on 2026-11-18 about 11:05 PM PT with John's OK and read back (Leads tab WEB-20261118-220820-FORMCH,
+WEB-20261118-203743-FORMCH, WEB-20261118-190742-TEST; Website Applications WEB-20261118-225107-FORMCH; resale Leads
+RES-20261118-225257-FORMCH; deals Subscribers DEAL-20261118-225436-TEST).
+
+Wording decisions (John 2026-11-18): the booking side box now reads "Usually within the hour during business hours (the same day
+otherwise), we email you back ..." (was "Usually the same day, John or Elizabeth emails you back ..."). The owner page keeps
+join@rentatwyndham.com and the resale page keeps owners@rentatwyndham.com - the Primer's "questions go to info@" rule covers renter
+messages only.
