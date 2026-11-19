@@ -44,7 +44,7 @@ Not covered live (by design): a real resale buyer, where John Kushman is cc'd an
 for real on 2026-11-09 and is covered by the backend's offline tests. Known and harmless: in resale TEST mode the buyer email and
 the page still say John Kushman was copied; only John ever sees that.
 
-Test rows: all six were deleted on 2026-11-18 about 11:20 PM PT with John's OK and read back (Leads tab WEB-20261118-220820-FORMCH,
+Test rows: all six were deleted on 2026-11-18 about 11:05 PM PT with John's OK and read back (Leads tab WEB-20261118-220820-FORMCH,
 WEB-20261118-203743-FORMCH, WEB-20261118-190742-TEST; Website Applications WEB-20261118-225107-FORMCH; resale Leads
 RES-20261118-225257-FORMCH; deals Subscribers DEAL-20261118-225436-TEST).
 
