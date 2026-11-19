@@ -1,0 +1,30 @@
+# Website form test checklist
+
+John's rule (2026-11-18): every form on rentatwyndham.com is tested end to end before a change to it is called done.
+Test all five points below on the live site, on desktop and at phone width (about 390px).
+
+## The five checks for every form
+1. **Response** - the visitor's submission really reached the backend. The page must read the backend reply, not assume success.
+   A `fetch(..., {mode: 'no-cors'})` cannot read the reply and shows success even when the send failed - that fails this check.
+2. **Missing or wrong fields** - each problem field is marked in red with its own plain message under it ("Enter your first name."),
+   plus one line by the button saying how many fields need attention. Not just the browser's one-at-a-time pop-up.
+3. **On-page message after sending** - professional and specific: thanks them by name, repeats what they sent,
+   says what happens next and when, and gives a reference ID. If the send fails, it says so and gives the email fallback.
+4. **Where they go next** - what the visitor sees or is sent to after the message (same page, a thank-you page, a link onward).
+   Write down the expected result for each form.
+5. **Email they get** - the auto-reply to the visitor (subject, sender, wording) and the team notice (to whom, subject),
+   both checked in Gmail. The team notice must show the same reference ID as the page.
+
+## Test data rules
+- Use a TEST identity: last name with "Test" or "Formcheck", own email (jellis@), notes "TEST - not a real request. Do not quote. Safe to delete."
+- At most two real submissions per form per test run.
+- Post a row on the AI Discussion Board (To ALL) before testing so the bots ignore TEST leads, and a row after with what to clean up.
+- Do not edit the Rental Worksheet during the test; list TEST rows for John to delete.
+
+## Forms and status
+| Form | Page | Script | Backend (automations/apps-script) | 1 Response | 2 Field errors | 3 Message | 4 Next | 5 Email |
+|---|---|---|---|---|---|---|---|---|
+| Booking request | /booking-request | assets/js/site.js | website-date-request | Fixed in PR #21 (reads reply) - live test pending | Fixed in PR #21 | Fixed in PR #21 | Stays on page, form hidden | Ack "We received your request - RentAtWyndham.com" + info@ "Date Request - ..." - live test pending |
+| Owner application | /rent-your-points | assets/js/owner-form.js | owner-interest | FAILS - no-cors | Browser pop-up only (plus email/phone checks) | "Thank you, ! ..." - to review | To check | Team "New Owner Application - ..." - to check |
+| Resale contract interest | /wyndham-points-for-sale | assets/js/contracts.js | resale-buyer-interest | FAILS - no-cors | Browser pop-up only | "Got it - thank you..." - to review | To check | Team "Resale Interest - ..." + buyer email - to check |
+| Special deals pop-up | / (home) | assets/js/deals-popup.js | special-deals-signup | FAILS - no-cors | First name + email only, one message | "You're on the list" box - to review | To check | Welcome "You're on the RentAtWyndham deals list" - to check |
