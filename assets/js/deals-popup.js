@@ -3,7 +3,8 @@
   // Sends to the Apps Script web app in RentAtWyndham/automations apps-script/special-deals-signup,
   // which writes the Subscribers tab of the "RAW Special Deals List" sheet. No email goes to the person.
   // ENDPOINT empty = the pop-up never shows on its own (add ?deals=preview to the URL to see it).
-  var ENDPOINT = '';
+  // Live web app: "RAW - Special Deals List (website)", deployment "v1.0.0 deals list" (2026-11-19).
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbygZLetPVzb3W9o7nHuw5PHB9-DfmwcmwuMHoruxSf_FpodFNww9PkHrJTo2pnLMs22/exec';
   var SHOW_AFTER_MS = 10000, SHOW_AT_SCROLL = 0.45;
   var SNOOZE_DAYS = 14, JOINED_DAYS = 365, KEY = 'raw_deals_popup';
   var INTERESTS = ['Wisconsin Dells', 'Orlando', 'Beach', 'Mountains', 'Las Vegas', 'Any Wyndham resort'];
