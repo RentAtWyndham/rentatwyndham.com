@@ -1,7 +1,10 @@
-/* Shared helpers for the site's forms (owner application, resale interest, deals pop-up).
+/* Shared helpers for the site's forms (booking request, owner application, resale interest, deals pop-up).
  * - check(): marks every bad field in red with its own message under it and returns the bad fields.
  * - send(): posts to an Apps Script web app and READS its JSON reply (no no-cors), so the page only
  *   says "thank you" when the backend really answered. Rejects on network failure, timeout or an unreadable reply.
+ * - busy(): disables the button with a "Sending..." label and, if the backend is slow (it can take 10-20 seconds),
+ *   changes the label after 4 seconds so the visitor knows it is still working. Returns done(label) to undo it.
+ * - showRef(): fills in "mention reference ..." when the backend returned an id; stays hidden when it did not.
  * Form test rule: docs/FORM_TEST_CHECKLIST.md. */
 (function () {
   var EMAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[A-Za-z]{2,}$/;
@@ -51,6 +54,18 @@
             function (err) { clearTimeout(timer); throw err; });
   }
 
+  var SLOW_MS = 4000;
+  function busy(btn, label, slowLabel) {
+    btn.disabled = true; btn.textContent = label;
+    var t = setTimeout(function () { btn.textContent = slowLabel || 'Sending - this can take up to 20 seconds...'; }, SLOW_MS);
+    return function (restoreLabel) { clearTimeout(t); if (restoreLabel) { btn.disabled = false; btn.textContent = restoreLabel; } };
+  }
+
+  function showRef(wrap, slot, id) {
+    if (!wrap || !slot) return;
+    if (id) { slot.textContent = String(id); wrap.hidden = false; } else { wrap.hidden = true; }
+  }
+
   var req = function (msg) { return function (v) { return v ? '' : msg; }; };
   var email = function (v) { return !v ? 'Enter your email address.' : (EMAIL_RE.test(v) ? '' : 'Enter a full email address, like name@example.com.'); };
   var phone = function (optional) {
@@ -61,6 +76,6 @@
   };
   var niceName = function (v) { return String(v || '').trim().toLowerCase().replace(/(^|[\s-])\S/g, function (m) { return m.toUpperCase(); }); };
 
-  window.RawForm = { check: check, setErr: setErr, summary: summary, focusFirst: focusFirst, send: send,
+  window.RawForm = { check: check, setErr: setErr, summary: summary, focusFirst: focusFirst, send: send, busy: busy, showRef: showRef,
     req: req, email: email, phone: phone, niceName: niceName };
 })();

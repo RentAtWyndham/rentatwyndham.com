@@ -58,7 +58,6 @@
     bad_phone: 'Please enter your phone number with the area code (10 digits).',
     check_failed: 'Please complete the quick check above the Submit button and send again.'
   };
-  function resetBtn() { submitBtn.disabled = false; submitBtn.textContent = 'Submit'; }
 
   f.addEventListener('submit', function (e) {
     e.preventDefault(); msg.hidden = true;
@@ -88,18 +87,20 @@
     data.set('page', location.href);
     data.set('submitted_at', new Date().toISOString());
     if (TURNSTILE_SITEKEY && !data.get('cf-turnstile-response')) { showErr('Please complete the quick check above the Submit button.'); return; }
-    submitBtn.disabled = true; submitBtn.textContent = 'Sending...';
-    // Read the backend's answer. ok:true = logged; ok:false with no error code = the sheet write failed but the
+    var done = K.busy(submitBtn, 'Sending...');
+    var resetBtn = function () { done('Submit'); };
+    // Read the backend's answer. ok:true = logged (v1.1.0 adds id, the reference shown on the page); ok:false with no error code = the sheet write failed but the
     // team email and owner confirmation still went out, so the application is received.
     K.send(ENDPOINT, data)
       .then(function (res) {
         if (res.ok || !res.error) {
-          f.hidden = true;
+          done(); f.hidden = true;
           var aside = document.querySelector('#apply .aside'); if (aside) aside.hidden = true;
           var head = document.getElementById('applyHead'); if (head) head.style.display = 'none';
           var first = K.niceName(f.first_name.value);
           if (first) document.getElementById('oName').textContent = ', ' + first;
           var em = document.getElementById('oEmail'); if (em) em.textContent = f.email.value.trim();
+          K.showRef(document.getElementById('oRefWrap'), document.getElementById('oRef'), res.id);
           okBox.hidden = false; okBox.scrollIntoView({ behavior: 'smooth', block: 'start' }); okBox.focus({ preventScroll: true });
           try { if (window.gtag) gtag('event', 'generate_lead', { form: 'owner_application' }); } catch (err) {}
         } else {
