@@ -21,7 +21,7 @@ e = html.escape
 
 URL = "https://www.rentatwyndham.com/testimonials"
 TITLE = "Testimonials | RentAtWyndham.com"
-DESC = "What owners said about working with RentAtWyndham's founder, John Ellis, at his earlier company (2012-2013)."
+DESC = "What owners have said about working with RentAtWyndham founder John Ellis."
 
 
 def sub1(pattern, repl, text, flags=re.S):
@@ -48,7 +48,7 @@ def section(title, intro, items):
 
 
 body = section("Renters", d.get("renter_disclosure", ""), d.get("renter", [])) + \
-       section("Owners (2012-2013, earlier company)", d.get("owner_disclosure", ""), d.get("owner", []))
+       section("Owners", d.get("owner_disclosure", ""), d.get("owner", []))
 
 main = ('<main id="main">\n<section><div class="wrap">\n'
         '  <div class="sec-head short"><span class="eyebrow">Testimonials</span><h1>In their own words</h1></div>\n'

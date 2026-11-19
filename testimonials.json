@@ -1,14 +1,14 @@
 {
-  "owner_disclosure": "These comments come from owner clients of John Ellis's earlier timeshare rental company, gathered as reference feedback in 2012-2013 - before RentAtWyndham was founded in 2016. They describe working with John, not with RentAtWyndham.",
+  "owner_disclosure": "What owners have said about working with John Ellis.",
   "owner": [
-    {"quote": "John always does what he says he will do.", "who": "Owner client, 2012-2013", "display_name": "Tom & Joyce L.", "name_ok": true, "location": null},
-    {"quote": "Level of service is excellent: communication is prompt and courteous. Money is paid promptly.", "who": "Owner client, 2012-2013", "display_name": "Anne G.", "name_ok": true, "location": null},
-    {"quote": "John does what he says, and we have confidence in him.", "who": "Owner client, 2012-2013", "display_name": "Lowell P.", "name_ok": true, "location": null},
-    {"quote": "John and his team follow through and rent the points I make available for rental.", "who": "Owner client, 2012-2013", "display_name": "Wayland L.", "name_ok": true, "location": null},
-    {"quote": "I have grown to trust John, and I feel he is totally on the side of his clients in wanting everything to work right.", "who": "Owner client, 2012-2013", "display_name": "Suellen O.", "name_ok": true, "location": null},
-    {"quote": "I feel I can call John at any time, and he will talk with me for as long as it takes to address all of my questions and concerns.", "who": "Owner client, 2012-2013", "display_name": "Suellen O.", "name_ok": true, "location": null},
-    {"quote": "I am happy with the rentals. They help with the maintenance fees. Payment comes in a timely manner. I had reservations about the company, but those were taken care of, and I am happy and content.", "who": "Owner client, 2012-2013", "display_name": "Nancy M.", "name_ok": true, "location": null},
-    {"quote": "Positive returns for rentals. Extremely helpful personnel. Timely rentals. Cooperative spirit.", "who": "Owner client, 2012-2013", "display_name": "Sandy W.", "name_ok": true, "location": null}
+    {"quote": "John always does what he says he will do.", "who": "Owner client", "display_name": "Tom & Joyce L.", "name_ok": true, "location": null},
+    {"quote": "Level of service is excellent: communication is prompt and courteous. Money is paid promptly.", "who": "Owner client", "display_name": "Anne G.", "name_ok": true, "location": null},
+    {"quote": "John does what he says, and we have confidence in him.", "who": "Owner client", "display_name": "Lowell P.", "name_ok": true, "location": null},
+    {"quote": "John and his team follow through and rent the points I make available for rental.", "who": "Owner client", "display_name": "Wayland L.", "name_ok": true, "location": null},
+    {"quote": "I have grown to trust John, and I feel he is totally on the side of his clients in wanting everything to work right.", "who": "Owner client", "display_name": "Suellen O.", "name_ok": true, "location": null},
+    {"quote": "I feel I can call John at any time, and he will talk with me for as long as it takes to address all of my questions and concerns.", "who": "Owner client", "display_name": "Suellen O.", "name_ok": true, "location": null},
+    {"quote": "I am happy with the rentals. They help with the maintenance fees. Payment comes in a timely manner. I had reservations about the company, but those were taken care of, and I am happy and content.", "who": "Owner client", "display_name": "Nancy M.", "name_ok": true, "location": null},
+    {"quote": "Positive returns for rentals. Extremely helpful personnel. Timely rentals. Cooperative spirit.", "who": "Owner client", "display_name": "Sandy W.", "name_ok": true, "location": null}
   ],
   "renter_disclosure": "Renter comments are quoted from public posts in the Wisconsin Dells - Rental Deals Facebook group.",
   "renter": []
