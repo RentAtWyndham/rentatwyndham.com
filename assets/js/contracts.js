@@ -81,29 +81,45 @@
   started.value = String(Date.now());
   var msg = document.getElementById('bMsg'), okBox = document.getElementById('bOk'), submitBtn = document.getElementById('bSubmit');
   function showErr(t) { msg.textContent = t; msg.hidden = false; }
+  var FAIL = 'We couldn\'t confirm your request went through. Please try again in a moment, or email owners@rentatwyndham.com with the contract IDs you like.';
+  function resetBtn() { submitBtn.disabled = false; submitBtn.textContent = 'Submit'; }
   f.addEventListener('submit', function (e) {
     e.preventDefault(); msg.hidden = true;
-    if (!f.checkValidity()) { f.reportValidity(); return; }
+    var K = window.RawForm;
+    var bad = K.check([
+      [f.first_name, K.req('Enter your first name.')],
+      [f.last_name, K.req('Enter your last name.')],
+      [f.email, K.email],
+      [f.phone, K.phone(true)],
+      [f.contracts, K.req('Add at least one contract - click "I\'m interested" on a contract above, or type its ID, like RC-19.')]
+    ]);
+    if (bad.length) { showErr(K.summary(bad)); K.focusFirst(bad); return; }
     if (f.website && f.website.value) { return; } // honeypot
     if (Date.now() - Number(started.value || 0) < 3000) { showErr('That was quick. Please take a second look and send again.'); started.value = String(Date.now() - 3000); return; }
-    if (!ENDPOINT) {
-      showErr('The form is being connected. Please email owners@rentatwyndham.com with the contract IDs you like and your questions.');
-      return;
-    }
+    if (!ENDPOINT) { showErr(FAIL); return; }
     var data = new URLSearchParams(new FormData(f));
     data.set('page', location.href);
     data.set('submitted_at', new Date().toISOString());
     submitBtn.disabled = true; submitBtn.textContent = 'Sending...';
-    fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', body: data })
-      .then(function () {
-        f.hidden = true;
-        var aside = document.querySelector('#interest .aside'); if (aside) aside.hidden = true;
-        okBox.hidden = false; okBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        try { if (window.gtag) gtag('event', 'generate_lead', { form: 'resale_interest' }); } catch (err) {}
+    // Read the backend's answer. ok:false with no error code = the sheet write failed, but the buyer reply and
+    // John K's email still went out (the team notice flags it), so the request is received.
+    K.send(ENDPOINT, data)
+      .then(function (res) {
+        if (res.ok || !res.error) {
+          var first = K.niceName(f.first_name.value);
+          document.getElementById('bTitle').textContent = 'Thank you' + (first ? ', ' + first : '') + '. We received your request.';
+          document.getElementById('bPicked').textContent = f.contracts.value.trim();
+          document.getElementById('bEmail').textContent = f.email.value.trim();
+          f.hidden = true;
+          var aside = document.querySelector('#interest .aside'); if (aside) aside.hidden = true;
+          okBox.hidden = false; okBox.scrollIntoView({ behavior: 'smooth', block: 'start' }); okBox.focus({ preventScroll: true });
+          try { if (window.gtag) gtag('event', 'generate_lead', { form: 'resale_interest' }); } catch (err) {}
+        } else if (res.error === 'missing_required') {
+          resetBtn(); showErr('Some required details didn\'t come through. Please check your name, email and contracts and send again.');
+        } else {
+          resetBtn(); showErr(FAIL);
+        }
       })
-      .catch(function () {
-        submitBtn.disabled = false; submitBtn.textContent = 'Submit';
-        showErr('Something went wrong sending that. Please email owners@rentatwyndham.com with the contract IDs you like.');
-      });
+      .catch(function () { resetBtn(); showErr(FAIL); });
   });
 })();

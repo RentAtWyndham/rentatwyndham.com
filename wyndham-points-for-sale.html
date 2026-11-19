@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="/assets/css/site.css?v=202610271900">
+<link rel="stylesheet" href="/assets/css/site.css?v=202611192000">
 
 </head>
 <body>
@@ -98,14 +98,21 @@
       <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <input type="hidden" name="_started" id="bStarted">
       <div class="submit-row"><button class="btn btn-teal" type="submit" id="bSubmit">Submit</button></div>
-      <p class="form-msg" id="bMsg" hidden></p>
+      <p class="form-msg" id="bMsg" role="alert" hidden></p>
     </form>
     <div class="aside">
       <div class="card"><div class="pad"><span class="tag">Prefer email?</span><p>Email <a href="mailto:owners@rentatwyndham.com"><b>owners@rentatwyndham.com</b></a> with the contract IDs (like RC-19) and your questions.</p></div></div>
       <div class="card"><div class="pad"><span class="tag">Good to know</span><ul class="checks one"><li>No fee to ask or to hold your place in line</li><li>Independent closing company handles transfer</li><li>Each contract is sold on its own</li></ul></div></div>
     </div>
   </div>
-  <div class="ok" id="bOk" hidden><b>Got it - thank you.</b><p>Your interest is logged and passed to the seller's closing contact. Expect a reply by email or phone.</p></div>
+  <div class="ok" id="bOk" hidden tabindex="-1" role="status">
+    <span class="tag">Request received</span>
+    <h3 id="bTitle">Thank you. We received your request.</h3>
+    <dl class="ok-sum"><dt>Contracts</dt><dd id="bPicked"></dd></dl>
+    <p>A confirmation email is on its way to <b id="bEmail"></b>. It copies John Kushman, who handles these contracts for their owners. He'll reach out by email or phone within the next couple of days to answer your questions.</p>
+    <p>There's no fee to ask, and nothing is owed.</p>
+    <p class="muted">No confirmation within a few minutes? Check your spam folder, or email <a href="mailto:owners@rentatwyndham.com">owners@rentatwyndham.com</a>. <a href="#contracts">Back to the contract list</a></p>
+  </div>
 </div></section>
 </main>
 <footer>
@@ -120,6 +127,7 @@
   </div>
 </footer>
 <script src="/assets/js/site.js?v=202610181200" defer></script>
-<script src="/assets/js/contracts.js?v=202610271900" defer></script>
+<script src="/assets/js/form-kit.js?v=202611190200" defer></script>
+<script src="/assets/js/contracts.js?v=202611190200" defer></script>
 </body>
 </html>

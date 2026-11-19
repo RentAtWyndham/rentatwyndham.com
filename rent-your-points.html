@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="/assets/css/site.css?v=202611170900">
+<link rel="stylesheet" href="/assets/css/site.css?v=202611192000">
 
 </head>
 <body>
@@ -105,19 +105,19 @@
       <input type="hidden" name="_started" id="oStarted">
       <div id="tsBox"></div>
       <div class="submit-row"><button class="btn btn-sun" type="submit" id="oSubmit">Submit</button></div>
-      <p class="form-msg" id="oMsg" hidden></p>
+      <p class="form-msg" id="oMsg" role="alert" hidden></p>
     </form>
     <div class="aside">
       <div class="card"><div class="pad"><span class="tag">Prefer email?</span><p>Email <a href="mailto:join@rentatwyndham.com"><b>join@rentatwyndham.com</b></a> and we'll take it from there.</p></div></div>
       <div class="card"><div class="pad"><span class="tag">Good to know</span><ul class="checks one"><li>No cost to you, ever</li><li>Never locked in</li><li>A real person, every time</li></ul></div></div>
     </div>
   </div>
-  <div class="thanks" id="oOk" hidden tabindex="-1">
+  <div class="thanks" id="oOk" hidden tabindex="-1" role="status">
     <div class="thanks-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></div>
     <h2>Thank you<span id="oName"></span>! We're so glad you reached out.</h2>
     <p class="thanks-lead">Your application is in, and a real person from our team will be in touch within a day to set up a quick, no-pressure call.</p>
     <ol class="thanks-steps">
-      <li><span><b>Check your inbox.</b> A confirmation is on its way from join@rentatwyndham.com. If you don't see it, peek in your spam folder.</span></li>
+      <li><span><b>Check your inbox.</b> A confirmation from join@rentatwyndham.com is on its way to <b id="oEmail"></b>. If you don't see it in a few minutes, check your spam folder.</span></li>
       <li><span><b>We'll call or email you.</b> John or one of our owners will reach out to learn about your ownership and answer your questions.</span></li>
       <li><span><b>We decide together.</b> If it's a good fit for both of us, we get to work on your account within 24 hours.</span></li>
     </ol>
@@ -150,6 +150,7 @@
   </div>
 </footer>
 <script src="/assets/js/site.js?v=202609242334" defer></script>
-<script src="/assets/js/owner-form.js?v=202611170200" defer></script>
+<script src="/assets/js/form-kit.js?v=202611190200" defer></script>
+<script src="/assets/js/owner-form.js?v=202611190200" defer></script>
 </body>
 </html>

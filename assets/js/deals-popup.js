@@ -1,7 +1,7 @@
 (function () {
   // "Join our special deals list" pop-up (homepage).
   // Sends to the Apps Script web app in RentAtWyndham/automations apps-script/special-deals-signup,
-  // which writes the Subscribers tab of the "RAW Special Deals List" sheet. No email goes to the person.
+  // which writes the Subscribers tab of the "RAW Special Deals List" sheet and (v1.1.0) emails new subscribers a welcome.
   // ENDPOINT empty = the pop-up never shows on its own (add ?deals=preview to the URL to see it).
   // Live web app: "RAW - Special Deals List (website)", deployment "v1.0.0 deals list" (2026-11-19).
   var ENDPOINT = 'https://script.google.com/macros/s/AKfycbygZLetPVzb3W9o7nHuw5PHB9-DfmwcmwuMHoruxSf_FpodFNww9PkHrJTo2pnLMs22/exec';
@@ -37,8 +37,9 @@
         '<button class="deals-no" type="button">No thanks</button>' +
       '</form>' +
       '<div class="deals-ok" id="dealsOk" hidden tabindex="-1">' +
-        '<span class="eyebrow">You\'re in</span><h2>You\'re on the list<span id="dealsName"></span>.</h2>' +
-        '<p class="deals-lead">Watch your inbox for our next deal. If it lands in spam, mark it "not spam" so you don\'t miss one.</p>' +
+        '<span class="eyebrow">You\'re in</span><h2 id="dealsOkTitle">You\'re on the list<span id="dealsName"></span>.</h2>' +
+        '<p class="deals-lead" id="dealsOkLead"></p>' +
+        '<p class="deals-lead">If our emails land in spam, mark them "not spam" so you don\'t miss a deal.</p>' +
         '<p class="deals-lead">Already have dates in mind? You don\'t have to wait for a deal.</p>' +
         '<a class="btn btn-sun deals-go" href="/booking-request">Request your dates</a>' +
       '</div>' +
@@ -86,30 +87,44 @@
   if (location.hash === '#deals') setTimeout(function () { open(true); }, 300);
 
   function showErr(t) { msg.textContent = t; msg.hidden = false; }
+  var FAIL = 'We couldn\'t confirm you were added. Please try again in a moment, or email info@rentatwyndham.com and ask to be added.';
+  function resetBtn() { go.disabled = false; go.textContent = 'Join the deals list'; }
   f.addEventListener('submit', function (e) {
     e.preventDefault(); msg.hidden = true;
     if (f.website.value) return; // honeypot
+    var K = window.RawForm;
+    var bad = K.check([[f.first_name, K.req('Enter your first name.')], [f.email, K.email]]);
+    if (bad.length) { showErr(K.summary(bad).replace(' above', '')); bad[0].focus(); return; }
     var first = f.first_name.value.trim(), email = f.email.value.trim();
-    if (!first) { showErr('Please add your first name.'); f.first_name.focus(); return; }
-    if (!/^[^\s@,;<>]+@[^\s@,;<>]+\.[A-Za-z]{2,}$/.test(email)) { showErr('Please check your email address.'); f.email.focus(); return; }
     if (Date.now() - openedAt < 2000) { showErr('That was quick. Please take a second look and send again.'); openedAt = 0; return; }
-    if (!ENDPOINT) { showErr('The deals list is being connected. Please email info@rentatwyndham.com and ask to be added.'); return; }
+    if (!ENDPOINT) { showErr(FAIL); return; }
     var picks = Array.prototype.map.call(f.querySelectorAll('input[name=interest]:checked'), function (x) { return x.value; });
     var data = new URLSearchParams();
     data.set('first_name', first); data.set('email', email); data.set('interests', picks.join(','));
     data.set('website', ''); data.set('page', location.href); data.set('submitted_at', new Date().toISOString());
     go.disabled = true; go.textContent = 'Joining...';
-    fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', body: data })
-      .then(function () {
-        setState('joined', JOINED_DAYS);
-        var n = first.toLowerCase().replace(/(^|[\s-])\S/g, function (m) { return m.toUpperCase(); });
-        d.querySelector('#dealsName').textContent = ', ' + n;
-        f.hidden = true; var ok = d.querySelector('#dealsOk'); ok.hidden = false; ok.focus();
-        try { if (window.gtag) gtag('event', 'sign_up', { method: 'deals_list' }); } catch (err) {}
+    // Read the backend's answer: {ok:true, added|updated} or {ok:false, error:'bad_email'|'missing_name'}.
+    K.send(ENDPOINT, data)
+      .then(function (res) {
+        if (res.ok) {
+          setState('joined', JOINED_DAYS);
+          d.querySelector('#dealsName').textContent = ', ' + K.niceName(first);
+          var lead = d.querySelector('#dealsOkLead');
+          if (res.updated) {
+            d.querySelector('#dealsOkTitle').firstChild.nodeValue = 'You\'re already on the list';
+            lead.textContent = 'We updated your deal preferences for ' + email + '.';
+          } else {
+            lead.textContent = 'A welcome email is on its way to ' + email + '. Watch your inbox for our next deal.';
+          }
+          f.hidden = true; var ok = d.querySelector('#dealsOk'); ok.hidden = false; ok.focus();
+          try { if (window.gtag) gtag('event', 'sign_up', { method: 'deals_list' }); } catch (err) {}
+        } else {
+          resetBtn();
+          if (res.error === 'bad_email') { K.setErr(f.email, 'Enter a full email address, like name@example.com.'); f.email.focus(); showErr('Please check your email address.'); }
+          else if (res.error === 'missing_name') { K.setErr(f.first_name, 'Enter your first name.'); f.first_name.focus(); showErr('Please add your first name.'); }
+          else showErr(FAIL);
+        }
       })
-      .catch(function () {
-        go.disabled = false; go.textContent = 'Join the deals list';
-        showErr('Something went wrong. Please try again, or email info@rentatwyndham.com and ask to be added.');
-      });
+      .catch(function () { resetBtn(); showErr(FAIL); });
   });
 })();
