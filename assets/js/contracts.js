@@ -82,7 +82,6 @@
   var msg = document.getElementById('bMsg'), okBox = document.getElementById('bOk'), submitBtn = document.getElementById('bSubmit');
   function showErr(t) { msg.textContent = t; msg.hidden = false; }
   var FAIL = 'We couldn\'t confirm your request went through. Please try again in a moment, or email owners@rentatwyndham.com with the contract IDs you like.';
-  function resetBtn() { submitBtn.disabled = false; submitBtn.textContent = 'Submit'; }
   f.addEventListener('submit', function (e) {
     e.preventDefault(); msg.hidden = true;
     var K = window.RawForm;
@@ -100,16 +99,19 @@
     var data = new URLSearchParams(new FormData(f));
     data.set('page', location.href);
     data.set('submitted_at', new Date().toISOString());
-    submitBtn.disabled = true; submitBtn.textContent = 'Sending...';
-    // Read the backend's answer. ok:false with no error code = the sheet write failed, but the buyer reply and
-    // John K's email still went out (the team notice flags it), so the request is received.
+    var done = K.busy(submitBtn, 'Sending...');
+    var resetBtn = function () { done('Submit'); };
+    // Read the backend's answer. An id (v1.4.0) means the request was handled: even if the sheet write failed, the buyer
+    // reply and the team notice went out (the notice flags it). Older backend: ok, or ok:false with no error code.
     K.send(ENDPOINT, data)
       .then(function (res) {
-        if (res.ok || !res.error) {
+        if (res.ok || res.id || !res.error) {
+          done();
           var first = K.niceName(f.first_name.value);
           document.getElementById('bTitle').textContent = 'Thank you' + (first ? ', ' + first : '') + '. We received your request.';
           document.getElementById('bPicked').textContent = f.contracts.value.trim();
           document.getElementById('bEmail').textContent = f.email.value.trim();
+          K.showRef(document.getElementById('bRefWrap'), document.getElementById('bRef'), res.id);
           f.hidden = true;
           var aside = document.querySelector('#interest .aside'); if (aside) aside.hidden = true;
           okBox.hidden = false; okBox.scrollIntoView({ behavior: 'smooth', block: 'start' }); okBox.focus({ preventScroll: true });

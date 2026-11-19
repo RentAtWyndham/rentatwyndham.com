@@ -42,6 +42,7 @@
         '<p class="deals-lead">If our emails land in spam, mark them "not spam" so you don\'t miss a deal.</p>' +
         '<p class="deals-lead">Already have dates in mind? You don\'t have to wait for a deal.</p>' +
         '<a class="btn btn-sun deals-go" href="/booking-request">Request your dates</a>' +
+        '<p class="deals-fine" id="dealsRefWrap" hidden>Questions? Email info@rentatwyndham.com and mention reference <b id="dealsRef"></b>.</p>' +
       '</div>' +
     '</div>';
   document.body.appendChild(d);
@@ -88,7 +89,6 @@
 
   function showErr(t) { msg.textContent = t; msg.hidden = false; }
   var FAIL = 'We couldn\'t confirm you were added. Please try again in a moment, or email info@rentatwyndham.com and ask to be added.';
-  function resetBtn() { go.disabled = false; go.textContent = 'Join the deals list'; }
   f.addEventListener('submit', function (e) {
     e.preventDefault(); msg.hidden = true;
     if (f.website.value) return; // honeypot
@@ -102,12 +102,13 @@
     var data = new URLSearchParams();
     data.set('first_name', first); data.set('email', email); data.set('interests', picks.join(','));
     data.set('website', ''); data.set('page', location.href); data.set('submitted_at', new Date().toISOString());
-    go.disabled = true; go.textContent = 'Joining...';
-    // Read the backend's answer: {ok:true, added|updated} or {ok:false, error:'bad_email'|'missing_name'}.
+    var done = K.busy(go, 'Joining...', 'Joining - this can take up to 20 seconds...');
+    var resetBtn = function () { done('Join the deals list'); };
+    // Read the backend's answer: {ok:true, added|updated, id (v1.2.0)} or {ok:false, error:'bad_email'|'missing_name'}.
     K.send(ENDPOINT, data)
       .then(function (res) {
         if (res.ok) {
-          setState('joined', JOINED_DAYS);
+          done(); setState('joined', JOINED_DAYS);
           d.querySelector('#dealsName').textContent = ', ' + K.niceName(first);
           var lead = d.querySelector('#dealsOkLead');
           if (res.updated) {
@@ -116,6 +117,7 @@
           } else {
             lead.textContent = 'A welcome email is on its way to ' + email + '. Watch your inbox for our next deal.';
           }
+          K.showRef(d.querySelector('#dealsRefWrap'), d.querySelector('#dealsRef'), res.id);
           f.hidden = true; var ok = d.querySelector('#dealsOk'); ok.hidden = false; ok.focus();
           try { if (window.gtag) gtag('event', 'sign_up', { method: 'deals_list' }); } catch (err) {}
         } else {
