@@ -226,6 +226,12 @@ input[type="date"]{min-height:2.9rem;display:block;text-align:left}
 .thanks-steps li{counter-increment:t;display:grid;grid-template-columns:2rem 1fr;gap:.7rem;align-items:start;background:var(--ice);border-radius:12px;padding:.8rem 1rem}
 .thanks-steps li::before{content:counter(t);font-family:var(--display);font-weight:800;color:var(--sun);font-size:1.4rem;line-height:1.1}
 .thanks-foot{font-size:.95rem;color:var(--muted)}
+.thanks-cta{margin:.2rem 0 0}
+.thanks-cta .btn{font-size:1.05rem}
+.talk-first{margin:.6rem 0 0;font-size:.95rem;color:#fff}
+.talk-first a{color:#fff;font-weight:700;text-decoration:underline}
+.talk-first-form{font-size:.92rem;color:var(--muted)}
+.talk-first-form a{font-weight:700}
 .thanks[hidden]{display:none}
 .thanks{scroll-margin-top:100px}
 .optq summary{cursor:pointer}
