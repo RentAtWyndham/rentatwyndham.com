@@ -53,7 +53,8 @@ const srv = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split
         ok(bk.v && bk.href === 'https://calendar.app.google/CTuLzUTubQTp26sS9' && bk.t === '_blank' && bk.txt === 'Pick a time to talk with John', 'owner: booking button shown, opens in a new tab');
         ok(await p.$eval('#oOk', e => Boolean(e.querySelector('#oBook').compareDocumentPosition(e.querySelector('.thanks-steps')) & 4)), 'owner: booking button above the steps');
         ok(/pick a time.*or we'll reach out within a day/i.test(await text(p, '#oOk .thanks-lead')), 'owner: lead says pick a time now or we reach out within a day');
-        ok((await p.$$eval('a[href="https://calendar.app.google/CTuLzUTubQTp26sS9"][target=_blank]', a => a.length)) === 3, 'owner: hero, form and thank-you booking links'); } },
+        ok((await p.$$eval('a[href="https://calendar.app.google/CTuLzUTubQTp26sS9"][target=_blank]', a => a.length)) === 3, 'owner: hero, form and thank-you booking links');
+        ok(!(await vis(p, '#oPrep')), 'owner: no prep follow-up without an edit token (older backend)'); } },
     { name: 'resale', url: '/wyndham-points-for-sale', form: '#buyerForm', btn: '#bSubmit', msg: '#bMsg', okSel: '#bOk', refWrap: '#bRefWrap', ref: '#bRef', idle: 'Submit', busy: 'Sending...', slow: 'Sending - this can take up to 20 seconds...',
       nEmpty: 4, emptyHas: ['Enter your first name.', 'Enter your last name.', 'Enter your email address.'],
       fill: async p => { await p.fill('#buyerForm [name=first_name]', 'test'); await p.fill('#buyerForm [name=last_name]', 'Formcheck'); await p.fill('#buyerForm [name=email]', 'jellis@rentatwyndham.com'); await p.fill('#buyerForm [name=phone]', '555-010-0100');
@@ -130,6 +131,72 @@ const srv = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split
   // booking: too-quick guard and ?resort= prefill still work
   { const mock = { current: { json: FORMS[0].okJson } }; const { page, posts, ctx } = await open('/booking-request?resort=Bonnet%20Creek', 1280, mock); const F = FORMS[0]; await page.waitForSelector(F.form);
     ok(/Bonnet Creek/.test(await page.$eval('#resort', s => s.value)), 'booking: ?resort= prefill'); await F.fill(page); await page.click(F.btn); ok(/That was quick/.test(await text(page, F.msg)) && posts.length === 0, 'booking: too-quick guard'); await ctx.close(); }
+
+  // owner prep questions (2026-11-27): always open, one-tap chips, live counter, thank-you follow-up for blanks only
+  const PREPQ = { vip: ['None', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Founders', 'Presidential Reserve', 'Not sure'], owners_count: ['1', '2', '3', '4 or more'],
+    mortgage: ['Fully paid off', 'Still paying a mortgage'], rented_before: ['Yes', 'No'], renting_now: ['Yes', 'No'] };
+  const OF = FORMS[1]; const REF = 'WEB-20261127-101010-FORMCH', TOK = 'tok_ABCdef123456789012345';
+  const chip = (scope, k, v) => scope + ' input[name="' + k + '"][value="' + v + '"] + span';
+  for (const width of [1280, 390]) {
+    const L = 'owner-prep@' + width; const mock = { current: { json: { ok: true, id: REF, edit: TOK } } };
+    let { page, posts, ctx } = await open('/rent-your-points', width, mock); await page.waitForSelector('#ownerForm', { state: 'visible' });
+    ok((await page.$$('#ownerForm details')).length === 0, L + ': no collapsible section');
+    ok(!/Optional/i.test(await text(page, '#ownerForm')), L + ': the word "Optional" is gone');
+    ok(await text(page, '#prepQ .legend') === 'Help John prepare for your call', L + ': heading');
+    ok(/^5 taps, about 30 seconds\./.test(await text(page, '#prepQ .prep-sub')), L + ': sub-line');
+    ok(await vis(page, '#prepQ fieldset.chips'), L + ': questions visible without opening anything');
+    ok(await text(page, '#prepCount') === '0 of 5 answered', L + ': counter starts at 0 of 5');
+    const got = await page.$$eval('#prepQ fieldset.chips', fs => fs.map(f => [f.dataset.q, Array.from(f.querySelectorAll('input[type=radio]')).map(i => i.value), f.querySelector('legend').textContent.trim()]));
+    ok(JSON.stringify(got.map(g => [g[0], g[1]])) === JSON.stringify(Object.entries(PREPQ)), L + ': five radio groups, same option values as before');
+    ok(got.every(g => g[2].length > 3), L + ': each group has a legend (screen readers)');
+    ok(await page.$eval('#ownerForm select[name=source]', el => el.tagName === 'SELECT'), L + ': "How did you hear about us" stays a select');
+    const hs = await page.$$eval('#prepQ .chip span', a => a.map(el => el.getBoundingClientRect().height));
+    ok(hs.length === 18 && hs.every(h => h >= 44), L + ': every chip at least 44px tall (min ' + Math.min.apply(null, hs) + ')');
+    await noScroll(page, L + ' chips');
+    await page.focus('#prepQ input[name=vip][value=None]'); await page.keyboard.press('Space');
+    ok(await page.$eval('#prepQ input[name=vip][value=None]', i => i.checked) && await text(page, '#prepCount') === '1 of 5 answered', L + ': keyboard Space selects, counter 1 of 5');
+    await page.keyboard.press('ArrowRight'); ok(await page.$eval('#prepQ input[name=vip][value=Bronze]', i => i.checked), L + ': arrow key moves the choice');
+    ok(await page.evaluate(() => getComputedStyle(document.activeElement.nextElementSibling).outlineStyle !== 'none'), L + ': focused chip shows an outline');
+    await page.click(chip('#prepQ', 'vip', 'Gold')); await page.click(chip('#prepQ', 'owners_count', '2')); await page.click(chip('#prepQ', 'renting_now', 'No'));
+    ok(await text(page, '#prepCount') === '3 of 5 answered', L + ': taps counted (3 of 5)');
+    await OF.fill(page); await OF.gate(page); await page.click('#oSubmit'); await page.waitForSelector('#oOk', { state: 'visible' });
+    const first = new URLSearchParams(posts[0]);
+    ok(first.get('vip') === 'Gold' && first.get('owners_count') === '2' && first.get('renting_now') === 'No' && first.get('mortgage') === 'Not given' && first.get('rented_before') === 'Not given', L + ': submit sends taps and "Not given" for blanks');
+    ok(await vis(page, '#oPrep'), L + ': follow-up shown when two were blank');
+    ok(await text(page, '#oPrepLeft') === '2 quick questions left so John can prepare', L + ': "2 quick questions left" (' + (await text(page, '#oPrepLeft')) + ')');
+    ok(JSON.stringify(await page.$$eval('#oPrepQs fieldset.chips', fs => fs.map(f => f.dataset.q))) === '["mortgage","rented_before"]', L + ': only the blank ones are asked');
+    ok(await page.$eval('#oOk', e => Boolean(e.querySelector('#oPrep').compareDocumentPosition(e.querySelector('#oBook')) & 4)), L + ': follow-up sits above the booking button');
+    const lh = await page.$$eval('#oPrepQs .chip span', a => a.map(el => el.getBoundingClientRect().height)); ok(lh.every(h => h >= 44), L + ': follow-up chips at least 44px');
+    await noScroll(page, L + ' follow-up');
+    mock.current = { json: { ok: true, id: REF, saved: ['mortgage'], kept: [] } };
+    await page.click(chip('#oPrepQs', 'later_mortgage', 'Fully paid off'));
+    await page.waitForFunction(() => /Saved/.test(document.querySelector('#oPrepQs [data-q=mortgage] .prep-status').textContent));
+    const up = new URLSearchParams(posts[posts.length - 1]);
+    ok(posts.length === 2 && up.get('action') === 'update' && up.get('ref') === REF && up.get('edit') === TOK && up.get('mortgage') === 'Fully paid off', L + ': tap posts one update with ref, token and the answer');
+    ok(JSON.stringify(Array.from(up.keys()).sort()) === JSON.stringify(['_started', 'action', 'edit', 'mortgage', 'ref']), L + ': update carries no other field (' + Array.from(up.keys()).join(',') + ')');
+    ok(await text(page, '#oPrepLeft') === '1 quick question left so John can prepare', L + ': counter down to 1 (singular)');
+    ok(await page.$eval('#oPrepQs [data-q=mortgage] input[value="Fully paid off"]', i => i.checked && i.disabled), L + ': saved answer stays selected and locked');
+    mock.current = { json: { ok: false, error: 'too_late' } };
+    await page.click(chip('#oPrepQs', 'later_rented_before', 'Yes'));
+    await page.waitForFunction(() => /tap again/.test(document.querySelector('#oPrepQs [data-q=rented_before] .prep-status').textContent));
+    ok(await page.$eval('#oPrepQs [data-q=rented_before] input[value=Yes]', i => !i.checked && !i.disabled), L + ': failed save says so and lets them tap again');
+    ok(await text(page, '#oPrepLeft') === '1 quick question left so John can prepare', L + ': failed save not counted');
+    mock.current = { kind: 'net' }; await page.click(chip('#oPrepQs', 'later_rented_before', 'No'));
+    await page.waitForFunction(() => /tap again/.test(document.querySelector('#oPrepQs [data-q=rented_before] .prep-status').textContent)); ok(true, L + ': network failure on a tap handled');
+    mock.current = { json: { ok: true, id: REF, saved: ['rented_before'], kept: [] } };
+    await page.click(chip('#oPrepQs', 'later_rented_before', 'Yes'));
+    await page.waitForFunction(() => /Saved/.test(document.querySelector('#oPrepQs [data-q=rented_before] .prep-status').textContent));
+    ok(await text(page, '#oPrepLeft') === 'Thank you - John has everything he needs.', L + ': all answered message');
+    ok(await vis(page, '#oBook'), L + ': booking button still there');
+    await noScroll(page, L + ' after saves');
+    await ctx.close();
+    ({ page, posts, ctx } = await open('/rent-your-points', width, mock)); await page.waitForSelector('#ownerForm', { state: 'visible' });
+    for (const kv of [['vip', 'Gold'], ['owners_count', '1'], ['mortgage', 'Fully paid off'], ['rented_before', 'No'], ['renting_now', 'No']]) await page.click(chip('#prepQ', kv[0], kv[1]));
+    ok(await text(page, '#prepCount') === '5 of 5 answered', L + ': 5 of 5 answered');
+    mock.current = { json: { ok: true, id: REF, edit: TOK } }; await OF.fill(page); await OF.gate(page); await page.click('#oSubmit'); await page.waitForSelector('#oOk', { state: 'visible' });
+    ok(!(await vis(page, '#oPrep')) && posts.length === 1, L + ': all five answered = no follow-up, no extra call');
+    await ctx.close();
+  }
   await browser.close(); srv.close();
   console.log(fail ? 'FAILED ' + fail + ' of ' + (pass + fail) : 'ALL ' + pass + ' CHECKS PASSED'); process.exit(fail ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(2); });

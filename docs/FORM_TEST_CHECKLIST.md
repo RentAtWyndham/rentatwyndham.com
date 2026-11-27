@@ -24,9 +24,11 @@ Test all five points below on the live site, on desktop and at phone width (abou
 ## Mocked test before every push
 `node docs/forms.mock.test.js .` (needs Playwright) serves the site locally, fakes script.google.com and checks all four forms at
 1280px and 390px: empty submit, bad email and phone, network failure, unreadable reply, every backend error code, the slow-send
-label, success with a reference, an older backend with no reference, and no sideways scroll. 352 checks. It sends nothing real.
+label, success with a reference, an older backend with no reference, and no sideways scroll; plus the owner prep questions (always-open chips, 44px taps, keyboard, live counter, thank-you follow-up for blanks only, one update per tap, "Saved", failed taps, all answered or no edit token = nothing extra). 430 checks. It sends nothing real.
 
 ## Forms and status
+Owner prep questions (2026-11-27, rentatwyndham.com PR for feat/owner-prep-chips + owner-interest v1.3.0): the five questions are always-open one-tap chips with a live "N of 5 answered" counter; the thank-you step asks only the blank ones and saves each tap (update call by reference). Mocked test 430 PASS at 1280px and 390px. LIVE RE-RUN PENDING until /exec moves to v1.3.0 (John's OK): one application that skips two questions and answers them on the thank-you step, desktop and 390px.
+
 Owner application live re-run 2026-11-26 12:33 PM PT on owner-interest v1.2.3 (web app version 10): ref WEB-20261126-123338-FORMCH, one submission, desktop. PASS - row written on Website Applications (read back); team alert from the join@ alias and owner auto-reply with the booking-link line ending "Best," (both read in jellis@ Gmail by John); queue-file entry and ntfy "New owner application" posted by the a9-max relay 12:35 PM PT (relay log); thank-you heading, reference, applicant email filled in step 1 ("on its way to jellis@rentatwyndham.com" - empty only in a raw page fetch, owner-form.js fills it on success), "Pick a time to talk with John" above the steps, form hidden. NOT re-checked: 390px (agent could not resize; last checked 2026-11-24 11:35 PM PT). Test row: WEB-20261126-123338-FORMCH (Status "TEST - delete") - John to delete. The 2026-11-24 row WEB-20261124-233515-FORMCH is gone. Previous run 2026-11-24 11:35 PM PT (PR 28): checks 1-4 PASS live; check 5 PASS on v1.1.0.
 
 Last updated 2026-11-18 11:00 PM PT. **All four forms passed all five checks live on 2026-11-18**, desktop and 390px, with the

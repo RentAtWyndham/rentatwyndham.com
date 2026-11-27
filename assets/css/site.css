@@ -234,8 +234,28 @@ input[type="date"]{min-height:2.9rem;display:block;text-align:left}
 .talk-first-form a{font-weight:700}
 .thanks[hidden]{display:none}
 .thanks{scroll-margin-top:100px}
-.optq summary{cursor:pointer}
-.optq>*+*{margin-top:.9rem}
+/* owner prep questions: one-tap chips (radio inputs), 44px tap height, wrap on narrow screens */
+.prepq{display:grid;gap:.9rem}
+.prep-sub{margin:-.6rem 0 0;color:var(--muted);font-size:.92rem}
+.prep-count{display:inline-block;margin-left:.4rem;font-weight:700;color:var(--pine)}
+fieldset.chips{border:0;padding:0;margin:0;min-width:0;display:grid;gap:.4rem}
+fieldset.chips legend{padding:0;margin:0 0 .4rem;font-weight:700;font-size:.9rem}
+.chip-row{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{display:inline-flex;position:relative;font-weight:600;font-size:.95rem}
+.chip input{position:absolute;opacity:0;width:1px;height:1px;margin:0;padding:0;border:0;pointer-events:none}
+.chip span{display:inline-flex;align-items:center;min-height:44px;padding:.45rem 1rem;border:1.5px solid var(--line);border-radius:999px;background:var(--snow);color:var(--ink);cursor:pointer;user-select:none;line-height:1.2}
+.chip span:hover{border-color:var(--pine)}
+.chip input:checked+span{background:var(--pine);border-color:var(--pine);color:var(--card)}
+.chip input:focus-visible+span{outline:3px solid var(--sun);outline-offset:2px}
+.chip input:disabled+span{cursor:default;opacity:.7}
+.chip input:checked:disabled+span{opacity:1}
+/* thank-you: questions still blank */
+.prep-later{text-align:left;background:var(--ice);border-radius:12px;padding:1rem 1.1rem;display:grid;gap:.9rem}
+.prep-later[hidden]{display:none}
+.prep-left{margin:0;font-weight:700}
+#oPrepQs{display:grid;gap:.9rem}
+.prep-status{font-size:.85rem;font-weight:700;color:var(--pine);margin-left:.4rem}
+.prep-status.err{color:#B42318}
 /* request form: inline field errors + confirmation */
 .field-err{display:block;font-weight:600;font-size:.85rem;color:#B42318}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .field-err{color:#FF9B92}}

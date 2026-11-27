@@ -37,6 +37,55 @@
   var started = document.getElementById('oStarted');
   started.value = String(Date.now());
   var msg = document.getElementById('oMsg'), okBox = document.getElementById('oOk'), submitBtn = document.getElementById('oSubmit');
+
+  // Prep questions: one-tap chips (radio inputs). Not required; a blank one is sent as "Not given" as before.
+  var PREP_KEYS = ['vip', 'owners_count', 'mortgage', 'rented_before', 'renting_now'];
+  var countEl = document.getElementById('prepCount');
+  function answered(k) { var c = f.querySelector('input[name="' + k + '"]:checked'); return c ? c.value : ''; }
+  function updateCount() {
+    var n = PREP_KEYS.filter(function (k) { return answered(k); }).length;
+    if (countEl) countEl.textContent = n + ' of 5 answered';
+  }
+  f.addEventListener('change', function (e) { if (e.target && PREP_KEYS.indexOf(e.target.name) > -1) updateCount(); });
+  updateCount();
+
+  // Thank-you step: ask only the questions left blank; each tap is saved at once (owner-interest v1.3.0 update call).
+  // Shown only when the backend returned an edit token, so an older backend simply shows nothing extra.
+  function prepLater(ref, edit) {
+    var wrap = document.getElementById('oPrep'), left = document.getElementById('oPrepLeft'), qs = document.getElementById('oPrepQs');
+    var blank = PREP_KEYS.filter(function (k) { return !answered(k); });
+    if (!wrap || !ref || !edit || !blank.length) return;
+    var remaining = blank.length;
+    function say() {
+      left.textContent = remaining === 0 ? 'Thank you - John has everything he needs.'
+        : remaining + (remaining === 1 ? ' quick question' : ' quick questions') + ' left so John can prepare';
+    }
+    blank.forEach(function (k) {
+      var src = f.querySelector('fieldset.chips[data-q="' + k + '"]'); if (!src) return;
+      var fs = src.cloneNode(true);
+      Array.prototype.forEach.call(fs.querySelectorAll('input'), function (i) { i.name = 'later_' + k; i.checked = false; i.disabled = false; });
+      var st = document.createElement('span'); st.className = 'prep-status'; st.setAttribute('role', 'status');
+      fs.querySelector('legend').appendChild(st);
+      fs.addEventListener('change', function (e) {
+        var v = e.target && e.target.value; if (!v) return;
+        var inputs = fs.querySelectorAll('input');
+        Array.prototype.forEach.call(inputs, function (i) { i.disabled = true; });
+        st.className = 'prep-status'; st.textContent = 'Saving...';
+        var data = new URLSearchParams();
+        data.set('action', 'update'); data.set('ref', ref); data.set('edit', edit); data.set('_started', started.value); data.set(k, v);
+        window.RawForm.send(ENDPOINT, data, 20000).then(function (res) {
+          if (res.ok && ((res.saved || []).indexOf(k) > -1 || (res.kept || []).indexOf(k) > -1)) {
+            st.textContent = 'Saved'; remaining--; say();
+          } else { throw new Error(res.error || 'not saved'); }
+        }).catch(function () {
+          Array.prototype.forEach.call(inputs, function (i) { i.disabled = false; i.checked = false; });
+          st.className = 'prep-status err'; st.textContent = "Couldn't save - please tap again";
+        });
+      });
+      qs.appendChild(fs);
+    });
+    say(); wrap.hidden = false;
+  }
   function showErr(t) { msg.textContent = t; msg.hidden = false; }
 
   function contractsJson() {
@@ -79,7 +128,7 @@
     if (Date.now() - Number(started.value || 0) < 3000) { showErr('That was quick. Please take a second look and send again.'); started.value = String(Date.now() - 3000); return; }
     if (!ENDPOINT) { showErr(FAIL); return; }
     var data = new URLSearchParams(new FormData(f));
-    // Optional questions left blank still need a value for the backend's checks
+    // Prep questions left blank still need a value for the backend's checks
     ['vip', 'owners_count', 'mortgage', 'rented_before', 'renting_now', 'source'].forEach(function (k) {
       if (!data.get(k)) data.set(k, 'Not given');
     });
@@ -101,6 +150,7 @@
           if (first) document.getElementById('oName').textContent = ', ' + first;
           var em = document.getElementById('oEmail'); if (em) em.textContent = f.email.value.trim();
           K.showRef(document.getElementById('oRefWrap'), document.getElementById('oRef'), res.id);
+          prepLater(res.id, res.edit);
           okBox.hidden = false; okBox.scrollIntoView({ behavior: 'smooth', block: 'start' }); okBox.focus({ preventScroll: true });
           try { if (window.gtag) gtag('event', 'generate_lead', { form: 'owner_application' }); } catch (err) {}
         } else {

@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="/assets/css/site.css?v=202611251000">
+<link rel="stylesheet" href="/assets/css/site.css?v=202611271100">
 
 </head>
 <body>
@@ -93,14 +93,16 @@
       <div id="contracts"></div>
       <button class="btn btn-line sm" type="button" id="addContract">+ Add another contract</button>
 
-      <details class="optq"><summary class="legend">Optional - five quick questions that help us prepare for our call</summary>
-      <div class="row2"><label>VIP status<select name="vip"><option value="">Choose one</option><option>None</option><option>Bronze</option><option>Silver</option><option>Gold</option><option>Platinum</option><option>Founders</option><option>Presidential Reserve</option><option>Not sure</option></select></label>
-        <label>People on the ownership<select name="owners_count"><option value="">Choose one</option><option>1</option><option>2</option><option>3</option><option>4 or more</option></select></label></div>
-      <label>Is your ownership paid off?<select name="mortgage"><option value="">Choose one</option><option>Fully paid off</option><option>Still paying a mortgage</option></select></label>
-      <div class="row2"><label>Have you rented out points before?<select name="rented_before"><option value="">Choose one</option><option>Yes</option><option>No</option></select></label>
-        <label>Are you renting them out now?<select name="renting_now"><option value="">Choose one</option><option>Yes</option><option>No</option></select></label></div>
+      <div class="prepq" id="prepQ">
+        <p class="legend">Help John prepare for your call</p>
+        <p class="prep-sub">5 taps, about 30 seconds. <span class="prep-count" id="prepCount" aria-live="polite">0 of 5 answered</span></p>
+        <fieldset class="chips" data-q="vip"><legend>VIP status</legend><div class="chip-row"><label class="chip"><input type="radio" name="vip" value="None"><span>None</span></label><label class="chip"><input type="radio" name="vip" value="Bronze"><span>Bronze</span></label><label class="chip"><input type="radio" name="vip" value="Silver"><span>Silver</span></label><label class="chip"><input type="radio" name="vip" value="Gold"><span>Gold</span></label><label class="chip"><input type="radio" name="vip" value="Platinum"><span>Platinum</span></label><label class="chip"><input type="radio" name="vip" value="Founders"><span>Founders</span></label><label class="chip"><input type="radio" name="vip" value="Presidential Reserve"><span>Presidential Reserve</span></label><label class="chip"><input type="radio" name="vip" value="Not sure"><span>Not sure</span></label></div></fieldset>
+        <fieldset class="chips" data-q="owners_count"><legend>People on the ownership</legend><div class="chip-row"><label class="chip"><input type="radio" name="owners_count" value="1"><span>1</span></label><label class="chip"><input type="radio" name="owners_count" value="2"><span>2</span></label><label class="chip"><input type="radio" name="owners_count" value="3"><span>3</span></label><label class="chip"><input type="radio" name="owners_count" value="4 or more"><span>4 or more</span></label></div></fieldset>
+        <fieldset class="chips" data-q="mortgage"><legend>Is your ownership paid off?</legend><div class="chip-row"><label class="chip"><input type="radio" name="mortgage" value="Fully paid off"><span>Fully paid off</span></label><label class="chip"><input type="radio" name="mortgage" value="Still paying a mortgage"><span>Still paying a mortgage</span></label></div></fieldset>
+        <fieldset class="chips" data-q="rented_before"><legend>Have you rented out points before?</legend><div class="chip-row"><label class="chip"><input type="radio" name="rented_before" value="Yes"><span>Yes</span></label><label class="chip"><input type="radio" name="rented_before" value="No"><span>No</span></label></div></fieldset>
+        <fieldset class="chips" data-q="renting_now"><legend>Are you renting them out now?</legend><div class="chip-row"><label class="chip"><input type="radio" name="renting_now" value="Yes"><span>Yes</span></label><label class="chip"><input type="radio" name="renting_now" value="No"><span>No</span></label></div></fieldset>
+      </div>
       <label>How did you hear about us?<select name="source"><option value="">Choose one</option><option>Facebook group</option><option>Facebook post</option><option>Google search</option><option>TUG or another forum</option><option>Referral from an owner</option><option>Other</option></select></label>
-      </details>
       <label>Anything else we should know<textarea rows="3" name="notes" maxlength="1000"></textarea></label>
       <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <input type="hidden" name="_started" id="oStarted">
@@ -117,6 +119,10 @@
     <div class="thanks-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></div>
     <h2>Thank you<span id="oName"></span>! We're so glad you reached out.</h2>
     <p class="thanks-lead">Your application is in. Pick a time for a quick, no-pressure call with John now, or we'll reach out within a day.</p>
+    <div class="prep-later" id="oPrep" hidden>
+      <p class="prep-left" id="oPrepLeft"></p>
+      <div id="oPrepQs"></div>
+    </div>
     <p class="thanks-cta"><a class="btn btn-sun" href="https://calendar.app.google/CTuLzUTubQTp26sS9" target="_blank" rel="noopener" id="oBook">Pick a time to talk with John</a></p>
     <ol class="thanks-steps">
       <li><span><b>Check your inbox.</b> A confirmation from join@rentatwyndham.com is on its way to <b id="oEmail"></b>. If you don't see it in a few minutes, check your spam folder.</span></li>
@@ -153,6 +159,6 @@
 </footer>
 <script src="/assets/js/site.js?v=202609242334" defer></script>
 <script src="/assets/js/form-kit.js?v=202611191500" defer></script>
-<script src="/assets/js/owner-form.js?v=202611191500" defer></script>
+<script src="/assets/js/owner-form.js?v=202611271100" defer></script>
 </body>
 </html>
